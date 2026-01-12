@@ -1,0 +1,23 @@
+strona główna
+4 podstrony
+1 podstrona:
+zdjęcia
+
+2 podstrona:
+animacja, gify
+
+3 podstrona:
+wrzutka
+
+4 podstrona:
+formularz kontaktowy
+
+5 podstrona:
+strona zakupu mediów + koszyk
+
+6 podstrona:
+konto użytkownika
+
+baza danych: supabase
+
+autoryzacja + użytkownicy: supabase / auth0
