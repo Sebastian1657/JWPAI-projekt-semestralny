@@ -1,5 +1,4 @@
-strona główna
-4 podstrony
+strona główna + 6 podstron
 1 podstrona:
 zdjęcia
 
