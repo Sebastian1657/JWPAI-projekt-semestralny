@@ -19,6 +19,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  z-index: 50;
 }
 
 .sidebarCollapsed {
@@ -62,6 +63,8 @@
   list-style: none;
   padding: 20px 10px;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .navItem {
@@ -88,11 +91,18 @@
   justify-content: center;
 }
 
+.navIcon svg {
+  width: 24px !important;
+  height: 24px !important;
+  stroke: currentColor;
+}
+
 .navLabel {
   margin-left: 15px;
   opacity: 0;
   transition: opacity 0.2s;
   font-weight: 500;
+  overflow: hidden;
 }
 
 .sidebarExpanded .navLabel {
@@ -138,4 +148,58 @@
   font-size: 0.85rem;
   color: #78716C;
   background-color: #FAFAF9;
+}
+
+.userProfile {
+  border-top: 1px solid #292524;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #1C1917;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  overflow: hidden; /* Ukrywa tekst przy zwinięciu */
+}
+
+.userProfile:hover {
+  background-color: #292524;
+}
+
+.userAvatar {
+  min-width: 32px;
+  height: 32px;
+  background-color: #F59E0B; /* Miodowe tło awatara */
+  color: #1C1917;
+  border-radius: 50%; /* Kółko */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.userDetails {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Płynne pojawianie się */
+  opacity: 0; 
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.sidebarExpanded .userDetails {
+  opacity: 1;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #FAFAF9;
+}
+
+.userEmail {
+  font-size: 0.75rem;
+  color: #78716C;
 }
