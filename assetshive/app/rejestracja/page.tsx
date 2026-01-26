@@ -26,7 +26,7 @@ export default function RejestracjaPage() {
         password,
         options: {
           data: {
-            username,
+            display_name: username,
           },
         },
       });
@@ -43,7 +43,7 @@ export default function RejestracjaPage() {
 
     return (
       <form ref={formRef} onSubmit={handleSubmit}>
-        <h1>Zarejestruj się</h1>
+        <h1>Rejestracja</h1>
         <input type="text" name="username" placeholder="Nazwa użytkownika" minLength={3} required/>
         <input type="email" name="email" placeholder="Email" required/>
         <input type="password" name="password" placeholder="Hasło" minLength={8} required/>
@@ -51,9 +51,7 @@ export default function RejestracjaPage() {
         <button type="submit">Utwórz konto</button>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && (
-          <p>Konto utworzone. Sprawdź skrzynkę pocztową w celu dokończenia rejestracji.</p>
-        )}
+        {success && (<p>Konto pomyślnie utworzone.</p>)}
       </form>
    );
 }
