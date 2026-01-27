@@ -1,10 +1,11 @@
-import DashboardLayout from './components/DashboardLayout';
+import UserState from '@/app/components/UserState';
 
 export default function Home() {
   return (
-    <DashboardLayout>
-      <h2>Witaj w ulu! 🐝</h2>
-      <p>Tutaj pojawią się twoje assety.</p>
-    </DashboardLayout>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <UserState />
+      </main>
+    </div>
   );
 }
