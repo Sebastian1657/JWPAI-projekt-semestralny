@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import styles from './DashboardLayout.module.css';
+import Link from 'next/link'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -36,15 +37,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Nawigacja */}
         <nav className={styles.navList}>
-          <NavItem icon={<HomeIcon />} label="Główna" expanded={isExpanded} />
-          <NavItem icon={<PictureIcon />} label="Zdjęcia" expanded={isExpanded} />
-          <NavItem icon={<AnimationIcon />} label="Animacje" expanded={isExpanded} />
-          <NavItem icon={<UploadIcon />} label="Wrzutka" expanded={isExpanded} loggedIn={logged} />
-          <NavItem icon={<BasketIcon />} label="Koszyk" expanded={isExpanded} loggedIn={logged} />
-          <NavItem icon={<ContactIcon />} label="Kontakt" expanded={isExpanded} />
+          <NavItem icon={<HomeIcon />}  label="Główna" href="/" expanded={isExpanded} />
+          <NavItem icon={<PictureIcon />} label="Zdjęcia" href="/pictures" expanded={isExpanded} />
+          <NavItem icon={<AnimationIcon />} label="Animacje" href="/animations" expanded={isExpanded} />
+          <NavItem icon={<UploadIcon />} label="Wrzutka" href="/" expanded={isExpanded} loggedIn={logged} />
+          <NavItem icon={<BasketIcon />} label="Koszyk" href="/" expanded={isExpanded} loggedIn={logged} />
+          <NavItem icon={<ContactIcon />} label="Kontakt" href="/" expanded={isExpanded} />
         </nav>
 
-        <div className={styles.userProfile}>
+        <div className={styles.userProfile} onClick={toggleLogin}>
             <div className={styles.avatar}>
                JK
             </div>
@@ -79,17 +80,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 }
 
-function NavItem({ icon, label, expanded, loggedIn = true}: { icon: React.ReactNode, label: string, expanded: boolean, loggedIn?: boolean}) {
+function NavItem({ icon, label, href, expanded, loggedIn = true}: { icon: React.ReactNode, label: string, href: string, expanded: boolean, loggedIn?: boolean}) {
   if (!loggedIn) {
     return null;
   }
   return (
-    <div className={styles.navItem}>
-      <div className={styles.navIcon}>
-        {icon}
+    <Link href={href}>
+      <div className={styles.navItem}>
+        <div className={styles.navIcon}>
+          {icon}
+        </div>
+        {expanded && <span className={styles.navLabel}>{label}</span>}
       </div>
-      {expanded && <span className={styles.navLabel}>{label}</span>}
-    </div>    
+    </Link>
   );
 }
 
@@ -98,7 +101,7 @@ function HomeIcon() {
   return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
 }
 function PictureIcon() {
-  return <svg width="800px" height="800px" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_901_1422)"><path d="M18 22.0315L11 15.0155C10.172 14.1875 9.836 14.1725 9 15.0085L1 23.0005V30.0005C1 30.5525 1.447 31.0005 2 31.0005H30C30.553 31.0005 31 30.5525 31 30.0005V2.00049C31 1.44749 30.553 1.00049 30 1.00049H2C1.447 1.00049 1 1.44749 1 2.00049V19.0005M16 24.0002L23 17.0002C23.836 16.1642 24.172 16.1722 25 17.0002L28 20.0002M23 9.00019C23 10.1042 22.104 11.0002 21 11.0002C19.896 11.0002 19 10.1042 19 9.00019C19 7.89619 19.896 7.00019 21 7.00019C22.104 7.00019 23 7.89619 23 9.00019Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></g><defs><clipPath id="clip0_901_1422"><rect width="32" height="32" fill="white"/></clipPath></defs></svg>
+  return <svg width="800px" height="800px" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clipPath="url(#clip0_901_1422)"><path d="M18 22.0315L11 15.0155C10.172 14.1875 9.836 14.1725 9 15.0085L1 23.0005V30.0005C1 30.5525 1.447 31.0005 2 31.0005H30C30.553 31.0005 31 30.5525 31 30.0005V2.00049C31 1.44749 30.553 1.00049 30 1.00049H2C1.447 1.00049 1 1.44749 1 2.00049V19.0005M16 24.0002L23 17.0002C23.836 16.1642 24.172 16.1722 25 17.0002L28 20.0002M23 9.00019C23 10.1042 22.104 11.0002 21 11.0002C19.896 11.0002 19 10.1042 19 9.00019C19 7.89619 19.896 7.00019 21 7.00019C22.104 7.00019 23 7.89619 23 9.00019Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></g><defs><clipPath id="clip0_901_1422"><rect width="32" height="32" fill="white"/></clipPath></defs></svg>
 }
 function AnimationIcon() {
   return <svg fill="currentColor" stroke="none" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,11H12a1,1,0,0,0-1,1V22a1,1,0,0,0,1,1H22a1,1,0,0,0,1-1V12A1,1,0,0,0,22,11ZM21,21H13V13h8ZM2,13a1,1,0,0,1-1-1V2A1,1,0,0,1,2,1H12a1,1,0,0,1,0,2H3v9A1,1,0,0,1,2,13ZM17,6a1,1,0,0,1,0,2H8v9a1,1,0,0,1-2,0V7A1,1,0,0,1,7,6Z"/></svg>
