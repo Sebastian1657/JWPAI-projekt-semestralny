@@ -1,0 +1,205 @@
+/* Kontener główny - dzieli ekran na Pasek boczny i Treść */
+.container {
+  display: flex;
+  min-height: 100vh;
+  font-family: sans-serif;
+  background-color: #FAFAF9;
+  color: #1C1917;
+}
+
+/* --- PASEK BOCZNY (Sidebar) --- */
+.sidebar {
+  background-color: #1C1917;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
+  border-right: 1px solid #44403C;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 50;
+}
+
+.sidebarCollapsed {
+  width: 70px;
+}
+
+.sidebarExpanded {
+  width: 260px;
+}
+
+/* Górna część paska z Hamburgerem */
+.sidebarHeader {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  /* Jeśli zwinięty - wyśrodkuj ikonę, jeśli rozwinięty - od lewej */
+  justify-content: flex-start; 
+  padding: 0 20px;
+  border-bottom: 1px solid #292524;
+}
+
+.hamburgerBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #F59E0B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.hamburgerBtn:hover {
+  background-color: #292524;
+}
+
+/* Lista nawigacji */
+.navList {
+  list-style: none;
+  padding: 20px 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.navItem:hover {
+  background-color: #292524;
+  color: #F59E0B;
+}
+
+.navIcon {
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navIcon svg {
+  width: 24px !important;
+  height: 24px !important;
+  stroke: currentColor;
+}
+
+.navLabel {
+  margin-left: 15px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.sidebarExpanded .navLabel {
+  opacity: 1;
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.header {
+  padding: 20px 40px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #E7E5E4;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1C1917;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.accent {
+  color: #F59E0B;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 40px;
+}
+
+.footer {
+  padding: 20px 40px;
+  border-top: 1px solid #E7E5E4;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #78716C;
+  background-color: #FAFAF9;
+}
+
+.userProfile {
+  border-top: 1px solid #292524;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #1C1917;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  overflow: hidden; /* Ukrywa tekst przy zwinięciu */
+}
+
+.userProfile:hover {
+  background-color: #292524;
+}
+
+.userAvatar {
+  min-width: 32px;
+  height: 32px;
+  background-color: #F59E0B; /* Miodowe tło awatara */
+  color: #1C1917;
+  border-radius: 50%; /* Kółko */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.userDetails {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Płynne pojawianie się */
+  opacity: 0; 
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.sidebarExpanded .userDetails {
+  opacity: 1;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #FAFAF9;
+}
+
+.userEmail {
+  font-size: 0.75rem;
+  color: #78716C;
+}
