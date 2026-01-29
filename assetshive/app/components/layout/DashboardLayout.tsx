@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import styles from './DashboardLayout.module.css';
-import Link from 'next/link'
+import Link from 'next/link';
+import UserState from '@/app/components/UserState';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,15 +48,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className={styles.userProfile} onClick={toggleLogin}>
             <div className={styles.avatar}>
-               JK
+              <NavItem icon={<UserIcon />} label="" href="/logowanie" expanded={isExpanded} loggedIn={!logged} />
+              <NavItem icon={<UserIcon />} label="" href="/account" expanded={isExpanded} loggedIn={logged} />
             </div>
             
-            {isExpanded && (
-              <div className={styles.userInfo}>
-                <div className={styles.userName}>Jan Kowalski</div>
-                <div className={styles.userEmail}>jan@assets.hive</div>
-              </div>
-            )}
+            {isExpanded && (<UserState />)}
         </div>
       </aside>
 
@@ -114,4 +111,7 @@ function ContactIcon() {
 }
 function BasketIcon() {
   return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 10L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 10L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>;
+}
+function UserIcon() {
+  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/><circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/></svg>
 }

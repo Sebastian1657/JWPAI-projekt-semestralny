@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import styles from './UserState.module.css';
 
 export default function UserState() {
   const [user, setUser] = useState<User | null>(null);
@@ -40,15 +41,25 @@ export default function UserState() {
   }
 
   return (
-    <div>
+    <>
       {user ? (
-        <>
-            <p>Witaj, {user.user_metadata?.display_name}!</p>
-            <button onClick={handleLogout} style={{cursor: 'pointer'}}>Wyloguj się</button>
-        </>
+        <div className={styles.userInfo}>
+          <div className={styles.userLeft}>
+            <div className={styles.userName}>{user.user_metadata?.display_name}</div>
+            <div className={styles.userEmail}>{user.email}</div>
+          </div>
+          <div className={styles.userRight}>
+            <svg onClick={handleLogout} style={{cursor: 'pointer'}} xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FA493C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M16 17l5-5-5-5M19.8 12H9"/></svg>
+          </div>
+        </div>
       ) : (
-        <p onClick={handleSignIn} style={{cursor: 'pointer'}}>Zaloguj się</p>
+        <div className={styles.userInfo}>
+          <div className={styles.userLeft}>
+            <div className={styles.userName}>Gość</div>
+            <div className={styles.userEmail} onClick={handleSignIn} style={{cursor: 'pointer'}}>Zaloguj się</div>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }

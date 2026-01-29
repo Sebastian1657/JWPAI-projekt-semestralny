@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import styles from './logowanie.module.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,17 +34,27 @@ export default function LoginPage() {
     router.push('/');
   }
 
+  const GoToRegister = async () => {
+    router.push('/rejestracja');
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Logowanie</h1>
+    <>
+      <form onSubmit={handleSubmit}>
+        <h1>Logowanie</h1>
 
-      <input type="email" name="email" placeholder="Email" required/>
-      <input type="password" name="password" placeholder="Hasło" minLength={8} required/>
-      <button type="submit" disabled={loading}>
-        {loading ? 'Logowanie...' : 'Zaloguj się'}
-      </button>
+        <input type="email" name="email" placeholder="Email" required/>
+        <input type="password" name="password" placeholder="Hasło" minLength={8} required/>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logowanie...' : 'Zaloguj się'}
+        </button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </form>
+      <div className={styles.registerInfo}>
+        <p>Nie masz konta? |</p>
+        <p className={styles.link} onClick={GoToRegister}>Zarejestruj się</p>
+      </div>
+    </>
   );
 }

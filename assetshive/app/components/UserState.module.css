@@ -1,0 +1,22 @@
+.userInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 25%;
+}
+
+.userRight button {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.userName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #FAFAF9;
+}
+  
+.userEmail {
+    font-size: 0.75rem;
+    color: #78716C;
+}

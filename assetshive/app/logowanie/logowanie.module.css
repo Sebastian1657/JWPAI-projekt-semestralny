@@ -1,0 +1,14 @@
+.registerInfo {
+    display: flex;
+    flex-direction: row;
+}
+
+.link {
+    color: #F59E0B;
+    margin-left: 5px;
+}
+
+.link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
