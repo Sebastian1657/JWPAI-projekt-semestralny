@@ -2,26 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { useUserStore } from '@/lib/zustand';
 import styles from './UserState.module.css';
 
 export default function UserState() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
+  const setGlobalUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     async function getActiveUser() {
       const { data: { user } } = await supabase.auth.getUser();
       
       setUser(user);
+      setGlobalUser(user);
       setLoading(false);
     }
 
     getActiveUser();
-  }, []);
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setGlobalUser(session?.user ?? null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, [setGlobalUser]);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -29,6 +38,7 @@ export default function UserState() {
         console.error(error.message);
     }
     setUser(null);
+    setGlobalUser(null)
     router.push('/');
   };
 
