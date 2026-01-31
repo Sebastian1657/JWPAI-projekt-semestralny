@@ -30,12 +30,10 @@
   width: 260px;
 }
 
-/* Górna część paska z Hamburgerem */
 .sidebarHeader {
   height: 70px;
   display: flex;
   align-items: center;
-  /* Jeśli zwinięty - wyśrodkuj ikonę, jeśli rozwinięty - od lewej */
   justify-content: flex-start; 
   padding: 0 20px;
   border-bottom: 1px solid #292524;
@@ -58,7 +56,6 @@
   background-color: #292524;
 }
 
-/* Lista nawigacji */
 .navList {
   list-style: none;
   padding: 20px 10px;

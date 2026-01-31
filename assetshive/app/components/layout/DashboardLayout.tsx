@@ -1,15 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useRouter, usePathname } from 'next/navigation';
 import styles from './DashboardLayout.module.css';
+import LoginModal from '../auth/LoginModal';
 import Link from 'next/link'
+import { User } from '@supabase/supabase-js';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [logged, setLogged] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const toggleLogin = () => {
-    setLogged(!logged);
+
+  useEffect(() => {
+    const getUser = async () => {
+       const { data: { session } } = await supabase.auth.getSession();
+       setUser(session?.user ?? null);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if(error) {
+        console.error(error.message);
+    }
+    setUser(null);
+    router.push('/');
   };
 
   const toggleSidebar = () => {
@@ -27,9 +56,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Ikona Hamburgera / Strzałki */}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               {isExpanded ? (
-                <path d="M18 6L6 18M6 6l12 12" /> // Ikona X (zamknij)
+                <path d="M18 6L6 18M6 6l12 12" />
               ) : (
-                <path d="M3 12h18M3 6h18M3 18h18" /> // Ikona Hamburger
+                <path d="M3 12h18M3 6h18M3 18h18" />
               )}
             </svg>
           </button>
@@ -40,22 +69,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <NavItem icon={<HomeIcon />}  label="Główna" href="/" expanded={isExpanded} />
           <NavItem icon={<PictureIcon />} label="Zdjęcia" href="/pictures" expanded={isExpanded} />
           <NavItem icon={<AnimationIcon />} label="Animacje" href="/animations" expanded={isExpanded} />
-          <NavItem icon={<UploadIcon />} label="Wrzutka" href="/" expanded={isExpanded} loggedIn={logged} />
-          <NavItem icon={<BasketIcon />} label="Koszyk" href="/" expanded={isExpanded} loggedIn={logged} />
-          <NavItem icon={<ContactIcon />} label="Kontakt" href="/" expanded={isExpanded} />
+          <NavItem icon={<UploadIcon />} label="Wrzutka" href="/upload" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<BasketIcon />} label="Koszyk" href="/basket" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<ContactIcon />} label="Kontakt" href="/contact" expanded={isExpanded} />
         </nav>
 
-        <div className={styles.userProfile} onClick={toggleLogin}>
-            <div className={styles.avatar}>
-               JK
-            </div>
-            
-            {isExpanded && (
-              <div className={styles.userInfo}>
-                <div className={styles.userName}>Jan Kowalski</div>
-                <div className={styles.userEmail}>jan@assets.hive</div>
-              </div>
-            )}
+        <div className={styles.userProfile} onClick={() => !user && setIsLoginModalOpen(true)}>
+           <div className={`${styles.userAvatar} ${!user ? 'bg-stone-600' : 'bg-amber-500'}`}>
+             {user ? 'SM' : '?'}
+           </div>
+
+           {isExpanded && (
+             <div className={styles.userDetails}>
+               {user ? (
+                 <>
+                   <span className={styles.userName}>Jan Kowalski</span>
+                   <span className={styles.userEmail}>{user.email}</span>
+                   <button className={styles.logoutBtn} onClick={handleLogout}>Wyloguj</button>
+                 </>
+               ) : (
+                 <>
+                   <span className={styles.userName}>Zaloguj się</span>
+                 </>
+               )}
+             </div>
+           )}
         </div>
       </aside>
 
@@ -76,6 +114,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </footer>
 
       </main>
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 }
@@ -113,5 +155,5 @@ function ContactIcon() {
   return <svg fill="currentColor" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.44,13c-.22,0-.45-.07-.67-.12a9.44,9.44,0,0,1-1.31-.39,2,2,0,0,0-2.48,1l-.22.45a12.18,12.18,0,0,1-2.66-2,12.18,12.18,0,0,1-2-2.66L10.52,9a2,2,0,0,0,1-2.48,10.33,10.33,0,0,1-.39-1.31c-.05-.22-.09-.45-.12-.68a3,3,0,0,0-3-2.49h-3a3,3,0,0,0-3,3.41A19,19,0,0,0,18.53,21.91l.38,0a3,3,0,0,0,2-.76,3,3,0,0,0,1-2.25v-3A3,3,0,0,0,19.44,13Zm.5,6a1,1,0,0,1-.34.75,1.05,1.05,0,0,1-.82.25A17,17,0,0,1,4.07,5.22a1.09,1.09,0,0,1,.25-.82,1,1,0,0,1,.75-.34h3a1,1,0,0,1,1,.79q.06.41.15.81a11.12,11.12,0,0,0,.46,1.55l-1.4.65a1,1,0,0,0-.49,1.33,14.49,14.49,0,0,0,7,7,1,1,0,0,0,.76,0,1,1,0,0,0,.57-.52l.62-1.4a13.69,13.69,0,0,0,1.58.46q.4.09.81.15a1,1,0,0,1,.79,1Z"/></svg>;
 }
 function BasketIcon() {
-  return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 10L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 10L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>;
+  return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M9 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 10L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 10L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>;
 }

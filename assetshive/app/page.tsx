@@ -1,4 +1,4 @@
-import UserState from '@/app/components/UserState';
+import UserState from '@/app/components/auth/UserState';
 
 export default function Home() {
   return (
