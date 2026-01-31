@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import styles from './DashboardLayout.module.css';
 import LoginModal from '../auth/LoginModal';
 import Link from 'next/link'
@@ -12,9 +12,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (searchParams.get('openLogin') === 'true') {
+      const timer = setTimeout(() => {
+        setIsLoginModalOpen(true);
+
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.delete('openLogin');
+        router.replace(`${pathname}?${newParams.toString()}`);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, router, pathname]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -76,14 +89,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className={styles.userProfile} onClick={() => !user && setIsLoginModalOpen(true)}>
            <div className={`${styles.userAvatar} ${!user ? 'bg-stone-600' : 'bg-amber-500'}`}>
-             {user ? 'SM' : '?'}
+              <NavItem icon={<UserIcon />} label="" href={pathname} expanded={isExpanded} />
+              <NavItem icon={<UserIcon />} label="" href="/account" expanded={isExpanded} loggedIn={!!user} />
            </div>
 
            {isExpanded && (
              <div className={styles.userDetails}>
                {user ? (
                  <>
-                   <span className={styles.userName}>Jan Kowalski</span>
+                   <span className={styles.userName}>{user.user_metadata?.display_name}</span>
                    <span className={styles.userEmail}>{user.email}</span>
                    <button className={styles.logoutBtn} onClick={handleLogout}>Wyloguj</button>
                  </>
@@ -156,4 +170,7 @@ function ContactIcon() {
 }
 function BasketIcon() {
   return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M9 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M15 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M6 10L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 10L14 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
+}
+function UserIcon() {
+  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/><circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/></svg>
 }

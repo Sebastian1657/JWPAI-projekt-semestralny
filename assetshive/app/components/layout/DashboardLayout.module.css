@@ -165,7 +165,7 @@
 .userAvatar {
   min-width: 32px;
   height: 32px;
-  background-color: #F59E0B; /* Miodowe tło awatara */
+  background-color: #F59E0B;
   color: #1C1917;
   border-radius: 50%; /* Kółko */
   display: flex;
