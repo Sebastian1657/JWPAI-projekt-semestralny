@@ -1,221 +1,333 @@
+/* Kontener strony */
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #FAFAF9;
-  color: #1C1917;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-.card {
-  width: 100%;
-  max-width: 600px;
-  background: #FFFFFF;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 2.5rem;
-  border: 1px solid #E7E5E4;
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #FAFAF9; /* Wax */
+  color: #1C1917; /* Graphite */
 }
 
 .header {
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  font-size: 2rem;
+  font-weight: 800;
   color: #1C1917;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
   color: #78716C;
-  font-size: 0.95rem;
 }
 
-/* --- DRAG & DROP ZONE --- */
-.dropzone {
-  position: relative;
+/* --- GRID SYSTEM --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+}
+
+/* Karta "Dodaj" (Plusik) */
+.addCard {
   border: 2px dashed #D6D3D1;
-  border-radius: 12px;
-  padding: 3rem 1.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  background-color: #FAFAF9;
-  overflow: hidden;
-}
-
-.dropzone:hover {
-  border-color: #F59E0B; /* Honey */
-  background-color: #FFFBEB; /* Light Honey */
-}
-
-.dropzoneActive {
-  border-color: #F59E0B;
-  background-color: #FFFBEB;
-  transform: scale(1.01);
-}
-
-.dropzoneContent {
+  border-radius: 16px;
+  background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  pointer-events: none; /* Żeby elementy w środku nie psuły drag eventów */
+  justify-content: center;
+  cursor: pointer;
+  min-height: 320px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.iconWrapper {
+.addCard:hover, .addCard.active {
+  border-color: #F59E0B;
+  background-color: #FFFBEB;
+  transform: translateY(-2px);
+}
+
+.addIcon {
   width: 64px;
   height: 64px;
-  border-radius: 50%;
-  background-color: #FEEBC8; /* Pale Honey */
-  color: #D97706; /* Dark Honey */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5rem;
+  color: #D6D3D1;
+  margin-bottom: 16px;
+  transition: color 0.2s;
 }
 
-.dropTextMain {
+.addCard:hover .addIcon {
+  color: #F59E0B;
+}
+
+.addText {
   font-weight: 600;
-  font-size: 1.1rem;
-  color: #44403C;
-}
-
-.dropTextSub {
-  font-size: 0.85rem;
-  color: #A8A29E;
+  color: #78716C;
 }
 
 .hiddenInput {
   display: none;
 }
 
-/* --- PREVIEW SECTION --- */
-.previewContainer {
-  margin-top: 1.5rem;
-  background: #FAFAF9;
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Karta Pliku */
+.fileCard {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   border: 1px solid #E7E5E4;
-}
-
-.fileInfo {
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s;
+  animation: slideUp 0.3s ease-out;
 }
 
-.previewImage {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 6px;
-  background-color: #E7E5E4;
+.fileCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.fileName {
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #1C1917;
-}
-
-.fileSize {
-  font-size: 0.75rem;
-  color: #78716C;
-}
-
-.removeBtn {
-  background: transparent;
+/* Przycisk usuwania (X) */
+.deleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
   border: none;
-  cursor: pointer;
-  color: #EF4444; /* Red */
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: background 0.2s;
+  color: #EF4444;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.removeBtn:hover {
+.fileCard:hover .deleteBtn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.deleteBtn:hover {
   background-color: #FEE2E2;
 }
 
-/* --- FORM INPUTS --- */
-.form {
-  margin-top: 2rem;
+/* Podgląd (Media) */
+.previewWrapper {
+  width: 100%;
+  height: 180px;
+  background-color: #F5F5F4;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #E7E5E4;
+}
+
+.previewImage, .previewVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.typeBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+
+/* Formularz w karcie */
+.cardForm {
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 12px;
+  flex-grow: 1;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 4px;
 }
 
 .label {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #44403C;
+  color: #78716C;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.input, .textarea {
+.input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #D6D3D1;
-  background-color: #FFFFFF;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #E7E5E4;
+  font-size: 0.9rem;
+  background-color: #FAFAF9;
   outline: none;
+  transition: all 0.2s;
 }
 
-.textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.input:focus, .textarea:focus {
+.input:focus {
   border-color: #F59E0B;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
 }
 
-.submitBtn {
-  margin-top: 1rem;
+.priceWrapper {
+  position: relative;
+}
+
+.currency {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A8A29E;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Dolny pasek akcji */
+.actionsBar {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Jeśli masz sidebar, trzeba to dostosować np. left: 260px (szerokość sidebara) */
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-top: 1px solid #E7E5E4;
+  display: flex;
+  justify-content: flex-end; /* Przycisk po prawej */
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+  /* Opcjonalnie: ograniczenie szerokości do kontenera */
+  /* max-width: 1200px; margin: 0 auto; */
+}
+
+/* Jeśli chcesz, aby pasek był wewnątrz layoutu (obok sidebara), 
+   możesz go wstawić statycznie pod gridem zamiast fixed */
+.staticActions {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 40px;
+}
+
+.uploadBtn {
   background-color: #F59E0B;
-  color: #FFFFFF;
-  font-weight: 600;
-  padding: 1rem;
+  color: white;
+  padding: 12px 32px;
   border-radius: 8px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
+  transition: background 0.2s;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 8px;
+  font-size: 1rem;
 }
 
-.submitBtn:hover {
+.uploadBtn:hover {
   background-color: #D97706;
 }
 
-.submitBtn:disabled {
-  background-color: #D6D3D1;
+.uploadBtn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+  background-color: #D6D3D1;
 }
+
+/* --- CONFIRMATION DIALOG (MODAL) --- */
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s;
+}
+
+.dialogBox {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: scaleIn 0.2s;
+}
+
+.dialogTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1C1917;
+}
+
+.dialogText {
+  color: #78716C;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btnCancel {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #D6D3D1;
+  background: white;
+  color: #44403C;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btnConfirm {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #EF4444;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }

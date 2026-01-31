@@ -2,30 +2,61 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import styles from './page.module.css';
 import { User } from '@supabase/supabase-js';
 
+interface FileItem {
+  id: string;
+  file: File;
+  preview: string;
+  name: string;
+  price: string;
+  type: 'image' | 'animation';
+}
+
 export default function UploadPage() {
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+  const [files, setFiles] = useState<FileItem[]>([]);
   const [dragActive, setDragActive] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // --- SPRAWDZANIE USERA ---
   useEffect(() => {
-    const getUser = async () => {
+    const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (session?.user) {
         setUser(session.user);
       }
     };
-    getUser();
+    checkUser();
   }, []);
+
+  // --- HANDLERY PLIKÓW ---
+
+  const handleFiles = (newFiles: FileList | null) => {
+    if (!newFiles) return;
+
+    const newItems: FileItem[] = Array.from(newFiles).map((file) => {
+      const isVideo = file.type.startsWith('video/');
+      const fileType = isVideo ? 'animation' : 'image';
+      
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        file,
+        preview: URL.createObjectURL(file),
+        name: file.name.split('.')[0],
+        price: '',
+        type: fileType as 'image' | 'animation'
+      };
+    });
+
+    setFiles((prev) => [...prev, ...newItems]);
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -41,201 +72,230 @@ export default function UploadPage() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0]);
-    }
-  };
-
-  const handleFile = (selectedFile: File) => {
-    if (!selectedFile.type.startsWith('image/') && !selectedFile.type.startsWith('animation/')) {
-      alert('Proszę wrzucić plik graficzny lub wideo.');
-      return;
-    }
-    setFile(selectedFile);
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-  };
-
-  const removeFile = () => {
-    setFile(null);
-    setPreview(null);
+    handleFiles(e.target.files);
     if (inputRef.current) inputRef.current.value = '';
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!file || !user) return;
+  // --- EDYCJA I USUWANIE ---
 
+  const updateItem = (id: string, field: 'name' | 'price', value: string) => {
+    setFiles((prev) => prev.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
+  };
+
+  const requestDelete = (id: string) => {
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmId) {
+      setFiles((prev) => prev.filter(item => item.id !== deleteConfirmId));
+      setDeleteConfirmId(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmId(null);
+  };
+
+  // --- UPLOAD DO SUPABASE ---
+
+  const handleUploadAll = async () => {
+    if (!user || files.length === 0) return;
     setLoading(true);
 
     try {
-      // Przygotowanie ścieżki
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`; 
+      // Uploadujemy pliki równolegle
+      await Promise.all(files.map(async (item) => {
+        const fileExt = item.file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 5)}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
 
-      // Upload pliku do Storage
-      const { error: uploadError } = await supabase.storage
-        .from('assets_bucket')
-        .upload(filePath, file);
+        // Storage
+        const { error: uploadError } = await supabase.storage
+          .from('assets_bucket')
+          .upload(filePath, item.file);
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('assets_bucket')
-        .getPublicUrl(filePath);
+        // Public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('assets_bucket')
+          .getPublicUrl(filePath);
 
-      // Zapis metadanych w bazie
-      const { error: dbError } = await supabase
-        .from('assets')
-        .insert({
-          title: title,
-          description: description,
-          file_url: publicUrl,
-          file_type: file.type.startsWith('image') ? 'image' : 'animation',
-          user_id: user.id
-        });
+        // Database Insert
+        const parsedPrice = parseFloat(item.price.replace(',', '.')) || 0;
 
-      if (dbError) throw dbError;
+        const { error: dbError } = await supabase
+          .from('assets')
+          .insert({
+            title: item.name,
+            description: '', // Opcjonalnie można dodać pole opisu
+            price: parsedPrice,
+            file_url: publicUrl,
+            file_type: item.type,
+            user_id: user.id
+          });
 
-      alert('Pliki pomyślnie wysłane!');
-      removeFile();
-      setTitle('');
-      setDescription('');
+        if (dbError) throw dbError;
+      }));
+
+      alert(`Pomyślnie dodano ${files.length} elementów do ula! 🐝`);
+      setFiles([]); // Czyścimy grid
+      router.refresh();
+
     } catch (error: unknown) {
-      console.error('Błąd uploadu:', error);
-      
-      let message = 'Wystąpił nieznany błąd';
-      if (error instanceof Error) {
-        message = error.message;
-      } else if (typeof error === 'string') {
-        message = error;
-      }
-
-      alert('Nie udało się wysłać pliku: ' + message);
+      console.error('Upload error:', error);
+      let msg = 'Wystąpił błąd';
+      if (error instanceof Error) msg = error.message;
+      alert('Błąd podczas wysyłania: ' + msg);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>🐝 Prześlij swoje pliki 🐝</h1>
-          <p className={styles.subtitle}>
-            Zarób na swoich assetach! Obsługujemy GIF, JPG, PNG, MP4.
-          </p>
+    <div className={styles.container} onDragEnter={handleDrag}>
+      
+      <div className={styles.header}>
+        <h1 className={styles.title}>🐝 Dodaj swoje zasoby 🐝</h1>
+        <p className={styles.subtitle}>Przeciągnij pliki lub kliknij plusik, aby dodać nowe assety!</p>
+      </div>
+
+      {/* GRID */}
+      <div className={styles.grid}>
+        
+        {/* KARTA "DODAJ" */}
+        <div 
+          className={`${styles.addCard} ${dragActive ? styles.active : ''}`}
+          onClick={() => inputRef.current?.click()}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+              setDragActive(false);
+            }
+          }}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            multiple
+            accept="image/*,video/*"
+            className={styles.hiddenInput}
+            onChange={handleChange}
+          />
+          <svg className={styles.addIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span className={styles.addText}>Dodaj pliki</span>
         </div>
 
-        <form onSubmit={handleSubmit} onDragEnter={handleDrag}>
-          
-          {/* DRAG & DROP AREA */}
-          {!file ? (
-            <div
-              className={`${styles.dropzone} ${dragActive ? styles.dropzoneActive : ''}`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              onClick={() => inputRef.current?.click()}
-            >
-              <input
-                ref={inputRef}
-                type="file"
-                className={styles.hiddenInput}
-                onChange={handleChange}
-                accept="image/*,animation/*"
-              />
-              <div className={styles.dropzoneContent}>
-                <div className={styles.iconWrapper}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                </div>
-                <div>
-                  <p className={styles.dropTextMain}>Kliknij lub przeciągnij plik tutaj</p>
-                  <p className={styles.dropTextSub}>Maksymalny rozmiar: 10MB</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* FILE PREVIEW */
-            <div className={styles.previewContainer}>
-              <div className={styles.fileInfo}>
-                {preview && file?.type.startsWith('image/') ? (
-                  <Image 
-                    src={preview} 
-                    alt="Preview" 
-                    width={48} 
-                    height={48} 
-                    className={styles.previewImage} 
-                    unoptimized 
-                  />
-                ) : (
-                  <div className={styles.iconWrapper} style={{width: 48, height: 48, margin: 0}}>
-                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                  </div>
-                )}
-                <div>
-                  <p className={styles.fileName}>{file.name}</p>
-                  <p className={(file.size > 10 * 1024 * 1024) ? styles.errorText : styles.fileSize}>
-                    {(file.size / (1024*1024)).toFixed(2)} MB
-                  </p>
-                </div>
-              </div>
-              <button type="button" onClick={removeFile} className={styles.removeBtn}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-              </button>
-            </div>
-          )}
-
-          {/* INPUT FIELDS */}
-          <div className={styles.form}>
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>Tytuł assetu</label>
-              <input 
-                type="text" 
-                className={styles.input} 
-                placeholder="np. Złote plastry miodu 3D"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>Opis (opcjonalnie)</label>
-              <textarea 
-                className={styles.textarea} 
-                placeholder="Opisz co zawiera ten plik..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            <button type="submit" className={styles.submitBtn} disabled={loading || !file}>
-              {loading ? (
-                <>
-                  <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{animation: 'spin 1s linear infinite'}}><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                  Wysyłanie do ula...
-                </>
-              ) : (
-                <>Wrzucaj!</>
-              )}
+        {/* KARTY PLIKÓW */}
+        {files.map((item) => (
+          <div key={item.id} className={styles.fileCard}>
+            
+            {/* Przycisk Usuwania */}
+            <button className={styles.deleteBtn} onClick={() => requestDelete(item.id)} title="Usuń">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
+
+            {/* Podgląd */}
+            <div className={styles.previewWrapper}>
+              {item.type === 'image' ? (
+                <Image 
+                  src={item.preview} 
+                  alt="Preview" 
+                  fill 
+                  className={styles.previewImage}
+                  unoptimized 
+                />
+              ) : (
+                <video src={item.preview} className={styles.previewVideo} muted loop autoPlay playsInline />
+              )}
+              <div className={styles.typeBadge}>
+                {item.type === 'animation' ? 'Wideo' : 'Obraz'}
+              </div>
+            </div>
+
+            {/* Formularz */}
+            <div className={styles.cardForm}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>Nazwa</label>
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  placeholder="Nazwa assetu"
+                  value={item.name}
+                  onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                />
+              </div>
+              
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>Cena (PLN)</label>
+                <div className={styles.priceWrapper}>
+                  <input 
+                    type="number" 
+                    className={styles.input} 
+                    placeholder="0"
+                    min="0"
+                    step="0.01"
+                    value={item.price}
+                    onChange={(e) => updateItem(item.id, 'price', e.target.value)}
+                  />
+                  <span className={styles.currency}>zł</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </form>
+        ))}
       </div>
+
+      {/* DOLNY PASEK AKCJI (Pojawia się, gdy są pliki) */}
+      {files.length > 0 && (
+        <div className={styles.staticActions}>
+           <button onClick={handleUploadAll} disabled={loading} className={styles.uploadBtn}>
+             {loading ? (
+                <>
+                  <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{animation: 'spin 1s linear infinite'}}><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                  Wysyłanie...
+                </>
+             ) : (
+                <>Wrzucaj wszystko ({files.length}) 🚀</>
+             )}
+           </button>
+        </div>
+      )}
+
+      {/* MODAL POTWIERDZENIA USUWANIA */}
+      {deleteConfirmId && (
+        <div className={styles.dialogOverlay}>
+          <div className={styles.dialogBox}>
+            <h3 className={styles.dialogTitle}>Usunąć ten plik?</h3>
+            <p className={styles.dialogText}>Tej operacji nie można cofnąć.</p>
+            <div className={styles.dialogButtons}>
+              <button onClick={cancelDelete} className={styles.btnCancel}>Anuluj</button>
+              <button onClick={confirmDelete} className={styles.btnConfirm}>Usuń</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx global>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}</style>
