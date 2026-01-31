@@ -2,41 +2,30 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase'; // Upewnij się, że masz ten plik
+import { supabase } from '@/lib/supabase';
 import styles from './page.module.css';
 import { User } from '@supabase/supabase-js';
 
 export default function UploadPage() {
-  // Stan Auth
   const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
-
-  // Stan UI/Formularza
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // --- 1. OCHRONA TRASY (REDIRECT JEŚLI NIEZALOGOWANY) ---
   useEffect(() => {
-    const checkUser = async () => {
+    const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        // Jeśli brak sesji -> przekieruj do logowania
-        router.replace('/logowanie'); 
-      } else {
+      
+      if (session?.user) {
         setUser(session.user);
       }
     };
-    checkUser();
-  }, [router]);
-
-  // --- HANDLERS (UI) ---
+    getUser();
+  }, []);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -65,7 +54,7 @@ export default function UploadPage() {
   };
 
   const handleFile = (selectedFile: File) => {
-    if (!selectedFile.type.startsWith('image/') && !selectedFile.type.startsWith('video/')) {
+    if (!selectedFile.type.startsWith('image/') && !selectedFile.type.startsWith('animation/')) {
       alert('Proszę wrzucić plik graficzny lub wideo.');
       return;
     }
@@ -80,7 +69,6 @@ export default function UploadPage() {
     if (inputRef.current) inputRef.current.value = '';
   };
 
-  // --- 2. LOGIKA UPLOADU DO SUPABASE ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !user) return;
@@ -88,24 +76,23 @@ export default function UploadPage() {
     setLoading(true);
 
     try {
-      // A. Przygotowanie ścieżki: USER_ID / TIMESTAMP.EXT
+      // Przygotowanie ścieżki
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`; 
 
-      // B. Upload pliku do Storage
+      // Upload pliku do Storage
       const { error: uploadError } = await supabase.storage
-        .from('assets_bucket') // <--- Upewnij się, że tak nazwałeś bucket w panelu
+        .from('assets_bucket')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // C. Pobranie publicznego URL
       const { data: { publicUrl } } = supabase.storage
         .from('assets_bucket')
         .getPublicUrl(filePath);
 
-      // D. Zapis metadanych w bazie (tabela 'assets')
+      // Zapis metadanych w bazie
       const { error: dbError } = await supabase
         .from('assets')
         .insert({
@@ -118,16 +105,10 @@ export default function UploadPage() {
 
       if (dbError) throw dbError;
 
-      alert('Wrzutka udana! 🐝');
-      
-      // Reset formularza
+      alert('Pliki pomyślnie wysłane!');
       removeFile();
       setTitle('');
       setDescription('');
-      
-      // Opcjonalnie: przekieruj do "Moich Rzeczy"
-      // router.push('/my-stuff');
-
     } catch (error: unknown) {
       console.error('Błąd uploadu:', error);
       
@@ -144,19 +125,17 @@ export default function UploadPage() {
     }
   };
 
-  // Jeśli user nie jest jeszcze załadowany (trwa sprawdzanie sesji), 
-  // nie pokazuj formularza, żeby nie mignął przed przekierowaniem.
   if (!user) {
-    return null; // Lub prosty spinner ładowania
+    return null;
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Dodaj Wrzutkę 🐝</h1>
+          <h1 className={styles.title}>🐝 Prześlij swoje pliki 🐝</h1>
           <p className={styles.subtitle}>
-            Podziel się swoimi zasobami z rojem. Obsługujemy JPG, PNG, MP4.
+            Zarób na swoich assetach! Obsługujemy GIF, JPG, PNG, MP4.
           </p>
         </div>
 
@@ -177,7 +156,7 @@ export default function UploadPage() {
                 type="file"
                 className={styles.hiddenInput}
                 onChange={handleChange}
-                accept="image/*,video/*"
+                accept="image/*,animation/*"
               />
               <div className={styles.dropzoneContent}>
                 <div className={styles.iconWrapper}>
