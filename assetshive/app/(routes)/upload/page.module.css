@@ -1,11 +1,9 @@
 .container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background-color: #FAFAF9; /* Warm gray / Wax */
+  background-color: #FAFAF9;
   color: #1C1917;
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -220,16 +218,4 @@
 .submitBtn:disabled {
   background-color: #D6D3D1;
   cursor: not-allowed;
-}
-
-/* Dark mode support (opcjonalnie) */
-@media (prefers-color-scheme: dark) {
-  .container { background-color: #0C0A09; color: #FAFAF9; }
-  .card { background-color: #1C1917; border-color: #292524; }
-  .title { color: #FAFAF9; }
-  .dropzone { background-color: #1C1917; border-color: #44403C; }
-  .dropzone:hover { background-color: #292524; }
-  .input, .textarea { background-color: #292524; border-color: #44403C; color: #FAFAF9; }
-  .previewContainer { background-color: #292524; border-color: #44403C; }
-  .fileName { color: #FAFAF9; }
 }
