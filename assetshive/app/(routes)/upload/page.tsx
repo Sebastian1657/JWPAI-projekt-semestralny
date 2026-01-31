@@ -14,6 +14,7 @@ interface FileItem {
   name: string;
   price: string;
   type: 'image' | 'animation';
+  is_active: boolean;
 }
 
 export default function UploadPage() {
@@ -51,7 +52,8 @@ export default function UploadPage() {
         preview: URL.createObjectURL(file),
         name: file.name.split('.')[0],
         price: '',
-        type: fileType as 'image' | 'animation'
+        type: fileType as 'image' | 'animation',
+        is_active: false
       };
     });
 

@@ -2,8 +2,8 @@
 .container {
   min-height: 100vh;
   padding: 40px;
-  background-color: #FAFAF9; /* Wax */
-  color: #1C1917; /* Graphite */
+  background-color: #FAFAF9;
+  color: #1C1917;
 }
 
 .header {
@@ -215,23 +215,19 @@
 .actionsBar {
   position: fixed;
   bottom: 0;
-  left: 0; /* Jeśli masz sidebar, trzeba to dostosować np. left: 260px (szerokość sidebara) */
+  left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   padding: 20px;
   border-top: 1px solid #E7E5E4;
   display: flex;
-  justify-content: flex-end; /* Przycisk po prawej */
+  justify-content: flex-end;
   align-items: center;
   gap: 20px;
   z-index: 100;
-  /* Opcjonalnie: ograniczenie szerokości do kontenera */
-  /* max-width: 1200px; margin: 0 auto; */
 }
 
-/* Jeśli chcesz, aby pasek był wewnątrz layoutu (obok sidebara), 
-   możesz go wstawić statycznie pod gridem zamiast fixed */
 .staticActions {
   max-width: 1200px;
   margin: 0 auto;

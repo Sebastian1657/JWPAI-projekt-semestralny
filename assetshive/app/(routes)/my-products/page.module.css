@@ -1,0 +1,269 @@
+.container {
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #FAFAF9;
+  color: #1C1917;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1C1917;
+}
+
+.subtitle {
+  color: #78716C;
+  margin-top: 4px;
+}
+
+/* --- GRID --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Karta Produktu */
+.card {
+  background: white;
+  border: 1px solid #E7E5E4;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #F59E0B;
+}
+
+/* Status aktywności na karcie (kropka) */
+.statusDot {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.activeDot { background-color: #10B981; box-shadow: 0 0 0 2px white; }
+.inactiveDot { background-color: #EF4444; box-shadow: 0 0 0 2px white; }
+
+.imageWrapper {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  background-color: #F5F5F4;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 16px;
+}
+
+.cardTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardPrice {
+  color: #D97706;
+  font-weight: 600;
+}
+
+/* --- MODAL SZCZEGÓŁÓW --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease-out;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #78716C;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.closeBtn:hover { background-color: #F5F5F4; color: #1C1917; }
+
+.modalHeader {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.modalImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: #F5F5F4;
+}
+
+.modalInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.editableField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #F59E0B;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.displayValue {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #1C1917;
+}
+
+.displayPrice {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #D97706;
+}
+
+.editIconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #A8A29E;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.editIconBtn:hover { color: #F59E0B; }
+
+/* Sekcja Akcji (Dół Modala) */
+.modalActions {
+  border-top: 1px solid #E7E5E4;
+  padding-top: 24px;
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Switch (Checkbox) */
+.switchLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #44403C;
+}
+
+.switchInput { display: none; }
+
+.switchSlider {
+  width: 44px;
+  height: 24px;
+  background-color: #E7E5E4;
+  border-radius: 24px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.switchSlider::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.switchInput:checked + .switchSlider { background-color: #10B981; }
+.switchInput:checked + .switchSlider::after { transform: translateX(20px); }
+
+.deleteActionBtn {
+  background-color: #FEF2F2;
+  color: #EF4444;
+  border: 1px solid #FEE2E2;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteActionBtn:hover { background-color: #FEE2E2; border-color: #FECACA; }
+
+/* Dialog Potwierdzenia (wewnątrz Modala) */
+.confirmBox {
+  margin-top: 20px;
+  background-color: #FFF1F2;
+  border: 1px solid #FECACA;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.confirmText { font-size: 0.9rem; color: #991B1B; margin-bottom: 12px; }
+.confirmActions { display: flex; gap: 8px; justify-content: center; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

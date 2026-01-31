@@ -83,6 +83,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <NavItem icon={<PictureIcon />} label="Zdjęcia" href="/pictures" expanded={isExpanded} />
           <NavItem icon={<AnimationIcon />} label="Animacje" href="/animations" expanded={isExpanded} />
           <NavItem icon={<UploadIcon />} label="Wrzutka" href="/upload" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<TagIcon />} label="Wystawione" href="/my-products" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<ArchiveIcon />} label="Zakupione" href="/my-stuff" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<BasketIcon />} label="Koszyk" href="/basket" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<ContactIcon />} label="Kontakt" href="/contact" expanded={isExpanded} />
         </nav>
@@ -173,4 +175,10 @@ function BasketIcon() {
 }
 function UserIcon() {
   return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/><circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/></svg>
+}
+function TagIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
+}
+function ArchiveIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>;
 }

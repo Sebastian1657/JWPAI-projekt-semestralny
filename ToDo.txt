@@ -27,10 +27,10 @@ strona główna + layout z navbarem;
 	opis ogólny: strona dla zalogowanych użytkowników, umożliwiająca dodawanie do serwisu swoich produktów.
 	opis techniczny: Panel typu grid z dodawanymi plikami. Pierwsze pole z plusikiem, kiedy nie ma żadnych elementów. Przy dodawaniu każdego pliku pytanie o nazwę i cenę. Po najechaniu na dodany plik pojawia się 'x' do usunięcia. Niżej przycisk "Dodaj".
 	features:
-		[] Drag'n'drop z plików z komputera
-		[] Przy próbie usunięcia dialog z potwierdzeniem
+		[x] Drag'n'drop z plików z komputera
+		[x] Przy próbie usunięcia dialog z potwierdzeniem
 		[] (+)Każdy plik w obramowaniu w kształcie hexagonu, przy większej ilości plików ustawiają się w plaster miodu
-		[] Wykrywanie formatu pliku i przypisywanie odpowiedniej flagi (zdjęcie/animacja)
+		[x] Wykrywanie formatu pliku i przypisywanie odpowiedniej flagi (zdjęcie/animacja)
 		[] (?)Animacja lecących pszczółek przy udanym uploadzie, dialog z kodem błędu przy nieudanym
 ;
 > moje multimedia:
@@ -47,7 +47,7 @@ strona główna + layout z navbarem;
 	opis techniczny: Panel typu grid, z miniaturką, nazwą, itp.. Po naciśnięciu informacje o produkcie, przy każdej ikonka edycji. Na dole przycisk usuń oraz (+)checkbox do dezaktywacji produktu w sklepie. 
 	features:
 		[] (+)dla każdego produktu opcja dodawania tagów (np. natura, zwierzęta, budowle, etc.)
-		[] dialog potwierdzenia usunięcia produktu
+		[x] dialog potwierdzenia usunięcia produktu
 ;
 > formularz kontaktowy:(?)ogólnie mało treści by tu było, bo tylko maile mi przychodzą do głowy, nie lepiej by to dać w stopce?
 	opis ogólny: Strona z danymi kontaktowymi do właścicieli strony.
