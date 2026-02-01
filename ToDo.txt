@@ -38,7 +38,7 @@ strona główna + layout z navbarem;
 	opis techniczny: Panel typu grid, z miniaturką, nazwą, itp.. Po naciśnięciu informacje o produkcie. Na dole przycisk usuń oraz pobierz. 
 	features:
 		[] (+)dla każdego produktu opcja dodawania tagów (np. natura, zwierzęta, budowle, etc.)
-		[] dialog potwierdzenia usunięcia produktu
+		[x] dialog potwierdzenia usunięcia produktu
 		[] (+)wyszukiwanie po tagach
 		[] (+)konwersja do innych formatów (+)przez api AI (link wyżej, przy zdjęciach)
 ;

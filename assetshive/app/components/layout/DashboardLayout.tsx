@@ -142,7 +142,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         
         <header className={styles.header}>
           <h1 className={styles.title}>
-            <span className={styles.accent}>⬢</span> AssetsHive
+            <Link href="/">
+              <span className={styles.accent}>⬢</span> AssetsHive
+            </Link>
           </h1>
         </header>
 
