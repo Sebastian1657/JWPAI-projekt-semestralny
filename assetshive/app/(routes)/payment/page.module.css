@@ -1,0 +1,98 @@
+.container {
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #FAFAF9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E7E5E4;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1C1917;
+}
+
+.summary {
+  background-color: #F5F5F4;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.total {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #F59E0B;
+}
+
+.methods {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.methodBadge {
+  padding: 8px 16px;
+  border: 1px solid #D6D3D1;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #78716C;
+  cursor: default;
+}
+
+.activeMethod {
+  border-color: #F59E0B;
+  background-color: #FFFBEB;
+  color: #D97706;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payBtn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.success {
+  background-color: #10B981;
+  color: white;
+}
+
+.fail {
+  background-color: #EF4444;
+  color: white;
+}
+
+.payBtn:hover {
+  opacity: 0.9;
+}
+
+.processing {
+  color: #78716C;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}

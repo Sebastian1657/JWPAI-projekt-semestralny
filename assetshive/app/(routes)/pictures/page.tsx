@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import styles from './page.module.css';
+import sharedStyles from '@/app/styles/SharedGrid.module.css';
+import localStyles from './page.module.css';
 import { User } from '@supabase/supabase-js';
 import { Asset } from '@/types';
 
@@ -81,6 +82,7 @@ export default function PicturesPage() {
       localStorage.setItem('basket', JSON.stringify(newCart));
       alert('🐝 Dodano do koszyka! 🐝');
       setSelectedAsset(null);
+      window.dispatchEvent(new Event('cart-updated'));
     } else {
       alert('Ten produkt jest już w koszyku');
     }
@@ -94,41 +96,41 @@ export default function PicturesPage() {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Galeria Grafik</h1>
-        <p className={styles.subtitle}>Przeglądaj unikalne zasoby stworzone przez naszą społeczność</p>
+    <div className={sharedStyles.container}>
+      <div className={sharedStyles.header}>
+        <h1 className={sharedStyles.title}>Galeria Grafik</h1>
+        <p className={sharedStyles.subtitle}>Przeglądaj unikalne zasoby stworzone przez naszą społeczność</p>
       </div>
 
       {loading ? (
-        <div className={styles.loadingContainer}>
-            <svg className={styles.loadingIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+        <div className={localStyles.loadingContainer}>
+          <svg className={localStyles.loadingIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
         </div>
       ) : (
         <>
           {/* GRID */}
-          <div className={styles.grid}>
+          <div className={sharedStyles.grid}>
             {assets.map((asset) => (
-              <div key={asset.id} className={styles.card} onClick={() => handleAssetClick(asset)}>
-                <div className={styles.imageWrapper}>
+              <div key={asset.id} className={sharedStyles.card} onClick={() => handleAssetClick(asset)}>
+                <div className={sharedStyles.mediaWrapper}>
                   <Image 
                     src={asset.file_url} 
                     alt={asset.title}
                     fill
-                    className={styles.cardImage}
+                    className={sharedStyles.cardImage}
                     unoptimized
                   />
                 </div>
-                <div className={styles.cardContent}>
-                  <div className={styles.infoTop}>
-                    <h3 className={styles.cardTitle}>{asset.title}</h3>
-                    <p className={styles.cardAuthor}>
+                <div className={sharedStyles.cardContent}>
+                  <div>
+                    <h3 className={sharedStyles.cardTitle}>{asset.title}</h3>
+                    <p className={sharedStyles.cardAuthor}>
                       Autor: {asset.author_name || 'Anonim'}
                     </p>
                   </div>
-                  <div className={styles.cardFooter}>
-                    <span className={styles.price}>{asset.price.toFixed(2)} zł</span>
-                    <button className={styles.buyBtnSmall}>
+                  <div className={sharedStyles.cardFooter}>
+                    <span className={sharedStyles.price}>{asset.price.toFixed(2)} zł</span>
+                    <button className={sharedStyles.actionBtn}>
                       {user ? 'Szczegóły' : 'Zaloguj się po więcej'}
                     </button>
                   </div>
@@ -139,19 +141,19 @@ export default function PicturesPage() {
 
           {/* PAGINACJA */}
           {totalPages > 1 && (
-            <div className={styles.pagination}>
+            <div className={sharedStyles.pagination}>
               <button 
-                className={styles.pageBtn} 
+                className={sharedStyles.pageBtn} 
                 disabled={page === 1}
                 onClick={() => handlePageChange(page - 1)}
               >
                 &larr; Poprzednia
               </button>
-              <span className={styles.pageInfo}>
+              <span className={sharedStyles.pageInfo}>
                 Strona {page} z {totalPages}
               </span>
               <button 
-                className={styles.pageBtn} 
+                className={sharedStyles.pageBtn} 
                 disabled={page === totalPages}
                 onClick={() => handlePageChange(page + 1)}
               >
@@ -164,35 +166,35 @@ export default function PicturesPage() {
 
       {/* MODAL SZCZEGÓŁÓW */}
       {selectedAsset && (
-        <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && setSelectedAsset(null)}>
-          <div className={styles.modal}>
-            <button className={styles.closeBtn} onClick={() => setSelectedAsset(null)}>
+        <div className={localStyles.overlay} onClick={(e) => e.target === e.currentTarget && setSelectedAsset(null)}>
+          <div className={localStyles.modal}>
+            <button className={localStyles.closeBtn} onClick={() => setSelectedAsset(null)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
             
-            <div className={styles.modalImageWrapper}>
+            <div className={localStyles.modalImageWrapper}>
               <Image 
                 src={selectedAsset.file_url} 
                 alt={selectedAsset.title}
                 fill
-                className={styles.modalImage}
+                className={localStyles.modalImage}
                 unoptimized
               />
             </div>
 
-            <div className={styles.modalContent}>
-                <span className={styles.modalType}>Grafika Cyfrowa</span>
-                <h2 className={styles.modalTitle}>{selectedAsset.title}</h2>
-                <p className={styles.modalAuthor}>
+            <div className={localStyles.modalContent}>
+                <span className={localStyles.modalType}>Grafika Cyfrowa</span>
+                <h2 className={localStyles.modalTitle}>{selectedAsset.title}</h2>
+                <p className={localStyles.modalAuthor}>
                     Autor: {selectedAsset.author_name || 'Anonim'}
                 </p>
-                <p className={styles.modalDescription}>
+                <p className={localStyles.modalDescription}>
                     {selectedAsset.description || 'Brak dodatkowego opisu dla tego zasobu.'}
                 </p>
 
-                <div className={styles.modalFooter}>
-                    <span className={styles.modalPrice}>{selectedAsset.price.toFixed(2)} zł</span>
-                    <button className={styles.addToCartBtn} onClick={() => handleAddToCart(selectedAsset)} >
+                <div className={localStyles.modalFooter}>
+                    <span className={localStyles.modalPrice}>{selectedAsset.price.toFixed(2)} zł</span>
+                    <button className={localStyles.addToCartBtn} onClick={() => handleAddToCart(selectedAsset)} >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                     Dodaj do koszyka
                     </button>

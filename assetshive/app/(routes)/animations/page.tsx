@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import styles from './page.module.css';
+import sharedStyles from '@/app/styles/SharedGrid.module.css';
+import localStyles from './page.module.css';
 import { User } from '@supabase/supabase-js';
 import { Asset } from '@/types';
 
@@ -23,7 +24,7 @@ export default function AnimationsPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // 1. Obsługa sesji
+  // Obsługa sesji
   useEffect(() => {
     const checkUser = async () => {
         const { data: { session } } = await supabase.auth.getSession();
@@ -36,7 +37,7 @@ export default function AnimationsPage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // 2. Pobieranie animacji
+  // Pobieranie animacji
   useEffect(() => {
     const fetchAnimations = async () => {
       setLoading(true);
@@ -85,8 +86,9 @@ export default function AnimationsPage() {
     if (!currentCart.find((item: Asset) => item.id === asset.id)) {
       const newCart = [...currentCart, asset];
       localStorage.setItem('basket', JSON.stringify(newCart));
-      alert('Dodano animację do koszyka! 🎬');
+      alert('🐝 Dodano do koszyka! 🐝');
       setSelectedAsset(null);
+      window.dispatchEvent(new Event('cart-updated'));
     } else {
       alert('Ten produkt już jest w Twoim koszyku.');
     }
@@ -101,31 +103,31 @@ export default function AnimationsPage() {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Galeria Animacji</h1>
-        <p className={styles.subtitle}>Odkryj dynamiczne zasoby wideo i GIFy</p>
+    <div className={sharedStyles.container}>
+      <div className={sharedStyles.header}>
+        <h1 className={sharedStyles.title}>Galeria Animacji</h1>
+        <p className={sharedStyles.subtitle}>Odkryj dynamiczne zasoby wideo i GIFy</p>
       </div>
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px', width: '100%' }}>
-          <svg style={{ width: '48px', height: '48px', color: '#F59E0B', animation: 'spin 1s linear infinite' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+        <div className={localStyles.loadingContainer}>
+          <svg className={localStyles.loadingIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
         </div>
       ) : (
         <>
           {assets.length === 0 ? (
-             <div style={{ textAlign: 'center', padding: '40px', color: '#78716C' }}>
+             <div className={sharedStyles.emptyState}>
                Brak animacji do wyświetlenia.
              </div>
           ) : (
-            <div className={styles.grid}>
+            <div className={sharedStyles.grid}>
               {assets.map((asset) => (
-                <div key={asset.id} className={styles.card} onClick={() => handleAssetClick(asset)}>
-                  <div className={styles.mediaWrapper}>
+                <div key={asset.id} className={sharedStyles.card} onClick={() => handleAssetClick(asset)}>
+                  <div className={sharedStyles.mediaWrapper}>
                     {/* WIDEO JAKO MINIATURKA */}
                     <video 
                       src={asset.file_url} 
-                      className={styles.cardVideo} 
+                      className={sharedStyles.cardVideo} 
                       muted 
                       playsInline
                       onMouseOver={(e) => e.currentTarget.play()} 
@@ -135,16 +137,16 @@ export default function AnimationsPage() {
                       }}
                     />
                   </div>
-                  <div className={styles.cardContent}>
-                    <div className={styles.infoTop}>
-                      <h3 className={styles.cardTitle}>{asset.title}</h3>
-                      <p className={styles.cardAuthor}>
+                  <div className={sharedStyles.cardContent}>
+                    <div>
+                      <h3 className={sharedStyles.cardTitle}>{asset.title}</h3>
+                      <p className={sharedStyles.cardAuthor}>
                         Autor: {asset.author_name || 'Użytkownik Ula'}
                       </p>
                     </div>
-                    <div className={styles.cardFooter}>
-                      <span className={styles.price}>{asset.price.toFixed(2)} zł</span>
-                      <button className={styles.buyBtnSmall}>
+                    <div className={sharedStyles.cardFooter}>
+                      <span className={sharedStyles.price}>{asset.price.toFixed(2)} zł</span>
+                      <button className={sharedStyles.actionBtn}>
                         {user ? 'Szczegóły' : 'Zaloguj po więcej'}
                       </button>
                     </div>
@@ -156,19 +158,19 @@ export default function AnimationsPage() {
 
           {/* PAGINACJA */}
           {totalPages > 1 && (
-            <div className={styles.pagination}>
+            <div className={sharedStyles.pagination}>
               <button 
-                className={styles.pageBtn} 
+                className={sharedStyles.pageBtn} 
                 disabled={page === 1}
                 onClick={() => handlePageChange(page - 1)}
               >
                 &larr; Poprzednia
               </button>
-              <span className={styles.pageInfo}>
+              <span className={sharedStyles.pageInfo}>
                 Strona {page} z {totalPages}
               </span>
               <button 
-                className={styles.pageBtn} 
+                className={sharedStyles.pageBtn} 
                 disabled={page === totalPages}
                 onClick={() => handlePageChange(page + 1)}
               >
@@ -181,17 +183,17 @@ export default function AnimationsPage() {
 
       {/* MODAL SZCZEGÓŁÓW */}
       {selectedAsset && (
-        <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && setSelectedAsset(null)}>
-          <div className={styles.modal}>
-            <button className={styles.closeBtn} onClick={() => setSelectedAsset(null)}>
+        <div className={localStyles.overlay} onClick={(e) => e.target === e.currentTarget && setSelectedAsset(null)}>
+          <div className={localStyles.modal}>
+            <button className={localStyles.closeBtn} onClick={() => setSelectedAsset(null)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
             
-            <div className={styles.modalMediaWrapper}>
+            <div className={localStyles.modalMediaWrapper}>
               {/* ODTWARZACZ W MODALU */}
               <video 
                 src={selectedAsset.file_url} 
-                className={styles.modalVideo} 
+                className={localStyles.modalVideo} 
                 controls 
                 autoPlay 
                 playsInline
@@ -200,20 +202,20 @@ export default function AnimationsPage() {
               />
             </div>
 
-            <div className={styles.modalContent}>
-              <span className={styles.modalType}>Animacja / Wideo</span>
-              <h2 className={styles.modalTitle}>{selectedAsset.title}</h2>
-              <p className={styles.modalAuthor}>
+            <div className={localStyles.modalContent}>
+              <span className={localStyles.modalType}>Animacja / Wideo</span>
+              <h2 className={localStyles.modalTitle}>{selectedAsset.title}</h2>
+              <p className={localStyles.modalAuthor}>
                 Autor: {selectedAsset.author_name || 'Anonim'}
               </p>
               
-              <p className={styles.modalDescription}>
+              <p className={localStyles.modalDescription}>
                 {selectedAsset.description || 'Brak dodatkowego opisu'}
               </p>
 
-              <div className={styles.modalFooter}>
-                <span className={styles.modalPrice}>{selectedAsset.price.toFixed(2)} zł</span>
-                <button className={styles.addToCartBtn} onClick={() => handleAddToCart(selectedAsset)} >
+              <div className={localStyles.modalFooter}>
+                <span className={localStyles.modalPrice}>{selectedAsset.price.toFixed(2)} zł</span>
+                <button className={localStyles.addToCartBtn} onClick={() => handleAddToCart(selectedAsset)} >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                   Dodaj do koszyka
                 </button>
@@ -222,10 +224,6 @@ export default function AnimationsPage() {
           </div>
         </div>
       )}
-      
-      <style jsx global>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 }

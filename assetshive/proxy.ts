@@ -36,7 +36,10 @@ export async function proxy(request: NextRequest) {
   if (!user && (
       request.nextUrl.pathname.startsWith('/upload') || 
       request.nextUrl.pathname.startsWith('/my-stuff') ||
-      request.nextUrl.pathname.startsWith('/basket')
+      request.nextUrl.pathname.startsWith('/basket') ||
+      request.nextUrl.pathname.startsWith('/my-products') ||
+      request.nextUrl.pathname.startsWith('/account') ||
+      request.nextUrl.pathname.startsWith('/payment')
   )) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
