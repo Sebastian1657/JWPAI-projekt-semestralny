@@ -86,8 +86,9 @@ export default function AnimationsPage() {
     if (!currentCart.find((item: Asset) => item.id === asset.id)) {
       const newCart = [...currentCart, asset];
       localStorage.setItem('basket', JSON.stringify(newCart));
-      alert('Dodano animację do koszyka! 🎬');
+      alert('🐝 Dodano do koszyka! 🐝');
       setSelectedAsset(null);
+      window.dispatchEvent(new Event('cart-updated'));
     } else {
       alert('Ten produkt już jest w Twoim koszyku.');
     }

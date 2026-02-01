@@ -82,6 +82,7 @@ export default function PicturesPage() {
       localStorage.setItem('basket', JSON.stringify(newCart));
       alert('🐝 Dodano do koszyka! 🐝');
       setSelectedAsset(null);
+      window.dispatchEvent(new Event('cart-updated'));
     } else {
       alert('Ten produkt jest już w koszyku');
     }

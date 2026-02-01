@@ -50,13 +50,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const updateCartCount = () => {
       const stored = localStorage.getItem('basket');
       const items = stored ? JSON.parse(stored) : [];
-      setCartCount(items.length);
+      if (Array.isArray(items)) {
+        setCartCount(items.length);
+      }
     };
     updateCartCount();
     window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cart-updated', updateCartCount);
     const interval = setInterval(updateCartCount, 1000);
     return () => {
       window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cart-updated', updateCartCount);
       clearInterval(interval);
     };
   }, []);
