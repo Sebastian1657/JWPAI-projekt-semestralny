@@ -12,7 +12,6 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPromoted = async () => {
-      // Pobieramy 8 najnowszych zdjęć do galerii na głównej
       const { data } = await supabase
         .from('assets')
         .select('*')
@@ -29,19 +28,18 @@ export default function Home() {
     fetchPromoted();
   }, []);
 
-  // Duplikujemy elementy, żeby animacja "infinite scroll" nie miała dziury
   const displayItems = [...galleryItems, ...galleryItems];
 
   return (
     <main className={styles.container}>
       
-      {/* 1. LOGO */}
+      {/* LOGO */}
       <div className={styles.logoWrapper}>
         <h1 className={styles.logo}>AssetsHive 🐝</h1>
         <p className={styles.sublogo}>Najsłodsze zasoby w sieci</p>
       </div>
 
-      {/* 2. PRZESUWAJĄCA SIĘ GALERIA */}
+      {/* PRZESUWAJĄCA SIĘ GALERIA */}
       {galleryItems.length > 0 && (
         <div className={styles.marqueeContainer}>
           <div className={styles.marqueeTrack}>
@@ -53,7 +51,7 @@ export default function Home() {
                   alt={item.title} 
                   fill 
                   className={styles.marqueeImage} 
-                  unoptimized // Dla wydajności w demo
+                  unoptimized
                 />
               </div>
             ))}
@@ -61,7 +59,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 3. HEXAGONALNE PRZYCISKI */}
+      {/* HEXAGONALNE PRZYCISKI */}
       <div className={styles.hexGroup}>
         
         {/* Przycisk Główny */}

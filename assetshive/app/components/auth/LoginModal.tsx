@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import styles from './LoginModal.module.css';
 
 interface LoginModalProps {
@@ -48,6 +47,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const handleRegisterClick = () => {
+    onClose();
+    router.push('/register');
   };
 
   return (
@@ -113,9 +117,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
         <div className={styles.footer}>
           Nie masz jeszcze konta?{' '}
-          <Link href="/register" className={styles.link}>
+          <span onClick={handleRegisterClick} className={styles.link}>
             Dołącz do Ula!
-          </Link>
+          </span>
         </div>
       </div>
     </div>
