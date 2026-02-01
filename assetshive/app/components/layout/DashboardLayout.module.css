@@ -149,7 +149,8 @@
 
 .userProfile {
   border-top: 1px solid #292524;
-  padding: 20px;
+  padding-left: 8px;
+  padding-right: 20px;
   display: flex;
   align-items: center;
   background-color: #1C1917;
@@ -158,19 +159,19 @@
   overflow: hidden; /* Ukrywa tekst przy zwinięciu */
 }
 
-.userProfile:hover {
+.userProfile svg:hover {
+  color:#F59E0B;
   background-color: #292524;
 }
 
-.userAvatar {
-  min-width: 32px;
-  height: 32px;
+.userAvatar svg {
+  min-width: 32px !important;
+  height: 32px !important;
+  color:#1C1917;
   background-color: #F59E0B;
-  color: #1C1917;
-  border-radius: 50%; /* Kółko */
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  justify-content: center;
   font-weight: bold;
   font-size: 14px;
 }
@@ -199,4 +200,16 @@
 .userEmail {
   font-size: 0.75rem;
   color: #78716C;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 25%;
+}
+
+.userRight button {
+  height: 100%;
+  aspect-ratio: 1 / 1;
 }

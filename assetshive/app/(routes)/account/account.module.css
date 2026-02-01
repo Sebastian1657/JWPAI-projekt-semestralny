@@ -1,0 +1,66 @@
+.accountInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.lineTop {
+    border: 2px solid #F59E0B;
+    margin-bottom: 2%;
+    width: 25%;
+}
+
+.infoRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: baseline;
+}
+
+.categoryName {
+    margin-right: 5px;
+}
+
+.optionButton {
+  margin-top: 5px;
+  margin-right: 10px;
+  padding: 5px;
+  background-color: #F59E0B; /* Miód */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.optionButton:hover {
+  background-color: #D97706; /* Ciemniejszy miód */
+}
+
+.lineBottom {
+    border: 2px solid #EF4444;
+    margin-top: 2%;
+    width: 25%;
+}
+
+.categoryNameRed {
+    margin-right: 5px;
+    color: #EF4444;
+}
+
+.optionButtonRed {
+  margin-left: 5px;
+  padding: 5px;
+  background-color: #EF4444; /* Miód */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.optionButtonRed:hover {
+  background-color: #b63434; /* Ciemniejszy miód */
+}
