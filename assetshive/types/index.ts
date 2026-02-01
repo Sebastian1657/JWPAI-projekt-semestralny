@@ -10,3 +10,8 @@ export interface Asset {
   is_active: boolean;
   created_at?: string;
 }
+
+export interface LibraryItem {
+  asset_id: string;
+  assets: Asset | null;
+}

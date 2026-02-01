@@ -103,7 +103,18 @@ export default function MyProductsPage() {
                     unoptimized
                   />
                 ) : (
-                  <video src={product.file_url} className="h-full w-full object-cover" />
+                  <video 
+                    src={product.file_url} 
+                    muted
+                    playsInline
+                    loop
+                    onMouseOver={(e) => e.currentTarget.play()}
+                    onMouseOut={(e) => {
+                      e.currentTarget.pause();
+                      e.currentTarget.currentTime = 0;
+                    }}
+                    onClick={() => window.open(product.file_url, '_blank')}
+                  />
                 )}
               </div>
               <div className={styles.cardContent}>

@@ -18,9 +18,9 @@ strona główna + layout z navbarem;
 	opis ogólny: strona umożliwiająca gościom podgląd, a zalogowanym użytkownikom kupno ukazywanych animacji/gifów.
 	opis techniczny: responsywny grid, w każdym polu miniatura animacji (np. pierwsza klatka), nazwa, autor, cena, (?)prawa autorskie, przycisk kupna
 	features:
-		[] Przycisk kupna uruchamia modal z uruchomionym podglądem animacji oraz resztą informacji + przycisk kup/dodaj do koszyka
-		[] Pola delikatnie się powiększają po najechaniu
-		[] Paginacja
+		[x] Przycisk kupna uruchamia modal z uruchomionym podglądem animacji oraz resztą informacji + przycisk kup/dodaj do koszyka
+		[x] Pola delikatnie się powiększają po najechaniu
+		[x] Paginacja
 		[] (+)Tagi + wyszukiwanie
 ;
 > upload:
