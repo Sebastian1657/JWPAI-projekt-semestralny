@@ -1,0 +1,95 @@
+.registerPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+.registerForm {
+    width: 35%;
+}
+
+.registerH2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.topLine {
+    border: 2px solid #F59E0B;
+    margin-bottom: 5%;
+}
+
+.formLabel {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #44403C;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1%;
+}
+
+.formInput {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #E7E5E4;
+  background-color: #f5f5f5;
+  font-size: 1rem;
+  color: #1C1917;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 7%;
+}
+
+.formInput:focus {
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1); /* Miodowa poświata */
+  background-color: #ffffff;
+}
+
+.submitBtn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  background-color: #F59E0B; /* Miód */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.submitBtn:hover {
+  background-color: #D97706; /* Ciemniejszy miód */
+}
+
+.loginInfo {
+    margin-top: 2%;
+    display: flex;
+    flex-direction: row;
+    color: #78716c;
+}
+
+.link {
+    color: #F59E0B;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.accountCreated {
+    color: #78716c;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
