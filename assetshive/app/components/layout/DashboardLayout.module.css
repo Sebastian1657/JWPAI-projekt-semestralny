@@ -101,6 +101,28 @@
   font-weight: 500;
   overflow: hidden;
 }
+/* Badge z ilością przedmiotów w koszyku */
+.badgeContainer {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #F59E0B; /* Miód */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+}
 
 .sidebarExpanded .navLabel {
   opacity: 1;
@@ -155,7 +177,7 @@
   background-color: #1C1917;
   cursor: pointer;
   transition: background-color 0.2s;
-  overflow: hidden; /* Ukrywa tekst przy zwinięciu */
+  overflow: hidden;
 }
 
 .userProfile:hover {
@@ -180,7 +202,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Płynne pojawianie się */
   opacity: 0; 
   transition: opacity 0.2s;
   white-space: nowrap;

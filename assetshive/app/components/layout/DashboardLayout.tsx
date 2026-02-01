@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [cartCount, setCartCount] = useState(0);
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -45,10 +46,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     };
   }, []);
 
+  useEffect(() => {
+    const updateCartCount = () => {
+      const stored = localStorage.getItem('basket');
+      const items = stored ? JSON.parse(stored) : [];
+      setCartCount(items.length);
+    };
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+    const interval = setInterval(updateCartCount, 1000);
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      clearInterval(interval);
+    };
+  }, []);
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if(error) {
-        console.error(error.message);
+      console.error(error.message);
     }
     setUser(null);
     router.push('/');
@@ -85,7 +101,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <NavItem icon={<UploadIcon />} label="Wrzutka" href="/upload" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<TagIcon />} label="Wystawione" href="/my-products" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<ArchiveIcon />} label="Zakupione" href="/my-stuff" expanded={isExpanded} loggedIn={!!user} />
-          <NavItem icon={<BasketIcon />} label="Koszyk" href="/basket" expanded={isExpanded} loggedIn={!!user} />
+          <div className={styles.badgeContainer}>
+            <NavItem icon={<BasketIcon />} label="Koszyk" href="/basket" expanded={isExpanded} loggedIn={!!user} />
+            {cartCount > 0 && !!user && (
+              <div className={styles.badge}>{cartCount}</div>
+            )}
+          </div>
           <NavItem icon={<ContactIcon />} label="Kontakt" href="/contact" expanded={isExpanded} />
         </nav>
 
