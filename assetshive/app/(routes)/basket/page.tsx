@@ -29,6 +29,7 @@ export default function BasketPage() {
     setCartItems(newCart);
     localStorage.setItem('basket', JSON.stringify(newCart));
     window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event('cart-updated'));
   };
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
@@ -64,7 +65,7 @@ export default function BasketPage() {
                 </div>
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemTitle}>{item.title}</h3>
-                  <p className="text-sm text-stone-500">ID: {item.id.slice(0, 8)}...</p>
+                  <p className="text-sm text-stone-500">Autor: {item.author_name}</p>
                 </div>
                 <div className={styles.itemPrice}>{item.price.toFixed(2)} zł</div>
                 <button onClick={() => removeItem(item.id)} className={styles.removeBtn}>

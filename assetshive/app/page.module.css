@@ -1,0 +1,137 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FAFAF9;
+  overflow: hidden;
+}
+
+/* --- LOGO --- */
+.logoWrapper {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.logo {
+  font-size: 5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #FBBF24 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -2px;
+  margin-bottom: 10px;
+}
+
+.sublogo {
+  font-size: 1.5rem;
+  color: #78716C;
+  font-weight: 500;
+}
+
+/* --- MARQUEE (Przewijana galeria) --- */
+.marqueeContainer {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  margin-bottom: 80px;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scroll 40s linear infinite;
+}
+
+/* Karta w galerii */
+.marqueeItem {
+  position: relative;
+  width: 250px;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.marqueeImage {
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.marqueeItem:hover .marqueeImage {
+  transform: scale(1.1);
+}
+
+/* --- HEXAGON BUTTONS --- */
+.hexGroup {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 40px;
+    margin: 0;
+}
+
+.hexWrapper {
+  filter: drop-shadow(0 10px 10px rgba(245, 158, 11, 0.3));
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hexWrapper:hover {
+  transform: scale(1.1) rotate(-2deg);
+  filter: drop-shadow(0 20px 20px rgba(245, 158, 11, 0.5));
+  overflow: visible;
+}
+
+.hexBtn {
+  width: 220px;
+  height: 190px;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-weight: 800;
+  text-align: center;
+  padding: 20px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Wariant dla drugiego przycisku */
+.hexBtnSecondary {
+  background: linear-gradient(135deg, #78716C 0%, #57534E 100%);
+  filter: grayscale(0.5);
+}
+
+.hexText {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.hexIcon {
+  margin-bottom: 10px;
+}
+
+/* --- ANIMACJE --- */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  .logo { font-size: 3.5rem; }
+  .hexGroup { gap: 20px; }
+}
