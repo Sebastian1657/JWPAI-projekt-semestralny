@@ -18,9 +18,9 @@ strona główna + layout z navbarem;
 	opis ogólny: strona umożliwiająca gościom podgląd, a zalogowanym użytkownikom kupno ukazywanych animacji/gifów.
 	opis techniczny: responsywny grid, w każdym polu miniatura animacji (np. pierwsza klatka), nazwa, autor, cena, (?)prawa autorskie, przycisk kupna
 	features:
-		[] Przycisk kupna uruchamia modal z uruchomionym podglądem animacji oraz resztą informacji + przycisk kup/dodaj do koszyka
-		[] Pola delikatnie się powiększają po najechaniu
-		[] Paginacja
+		[x] Przycisk kupna uruchamia modal z uruchomionym podglądem animacji oraz resztą informacji + przycisk kup/dodaj do koszyka
+		[x] Pola delikatnie się powiększają po najechaniu
+		[x] Paginacja
 		[] (+)Tagi + wyszukiwanie
 ;
 > upload:
@@ -38,7 +38,7 @@ strona główna + layout z navbarem;
 	opis techniczny: Panel typu grid, z miniaturką, nazwą, itp.. Po naciśnięciu informacje o produkcie. Na dole przycisk usuń oraz pobierz. 
 	features:
 		[] (+)dla każdego produktu opcja dodawania tagów (np. natura, zwierzęta, budowle, etc.)
-		[] dialog potwierdzenia usunięcia produktu
+		[x] dialog potwierdzenia usunięcia produktu
 		[] (+)wyszukiwanie po tagach
 		[] (+)konwersja do innych formatów (+)przez api AI (link wyżej, przy zdjęciach)
 ;
@@ -59,11 +59,11 @@ strona główna + layout z navbarem;
 	opis ogólny: Podgląd produktów w koszyku oraz realizacja zakupu.
 	opis techniczny: Panel typu grid z dodanymi produktami oraz podsumowanie płatności.
 	features:
-		[] Wyświetlanie ilości produktów w koszyku, przy jego ikonce na navbarze (np. w żółtym kółeczku)
-		[] Koszt sumaryczny za produkty
-		[] Podsumowanie produktów (+)z możliwością zmiany formatu; metoda płatności, Przycisk przekierowania do pośrednika płatności (tutaj placeholder, bo nie ma sensu robić bramki płatności)
-		[] W placeholderze bramki płatności 2 przyciski: zakup udany i zakup nieudany
-		[] Przy udanym zakupie dodanie assetów do konta użytkownika oraz/lub wysłanie na maila (bramka mailowa)
+		[x] Wyświetlanie ilości produktów w koszyku, przy jego ikonce na navbarze (np. w żółtym kółeczku)
+		[x] Koszt sumaryczny za produkty
+		[x] Podsumowanie produktów i metoda płatności, Przycisk przekierowania do pośrednika płatności (tutaj placeholder, bo nie ma sensu robić bramki płatności)
+		[x] W placeholderze bramki płatności 2 przyciski: zakup udany i zakup nieudany
+		[x] Przy udanym zakupie dodanie assetów do konta użytkownika
 		[] (+)Każdy plik w obramowaniu w kształcie hexagonu, przy większej ilości plików ustawiają się w plaster miodu
 		[] (+)Animacja lecących pszczółek przy udanej transakcji
 
