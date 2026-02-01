@@ -43,7 +43,7 @@ export default function UserState() {
   };
 
   const handleSignIn = async () => {
-    router.push('/logowanie');
+    router.push('/login');
   }
 
   if (loading) {

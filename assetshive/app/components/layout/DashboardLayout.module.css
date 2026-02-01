@@ -30,12 +30,10 @@
   width: 260px;
 }
 
-/* Górna część paska z Hamburgerem */
 .sidebarHeader {
   height: 70px;
   display: flex;
   align-items: center;
-  /* Jeśli zwinięty - wyśrodkuj ikonę, jeśli rozwinięty - od lewej */
   justify-content: flex-start; 
   padding: 0 20px;
   border-bottom: 1px solid #292524;
@@ -58,7 +56,6 @@
   background-color: #292524;
 }
 
-/* Lista nawigacji */
 .navList {
   list-style: none;
   padding: 20px 10px;
@@ -168,7 +165,7 @@
 .userAvatar {
   min-width: 32px;
   height: 32px;
-  background-color: #F59E0B; /* Miodowe tło awatara */
+  background-color: #F59E0B;
   color: #1C1917;
   border-radius: 50%; /* Kółko */
   display: flex;

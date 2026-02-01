@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import DashboardLayout from './components/layout/DashboardLayout';
 import "./globals.css";
@@ -25,12 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <DashboardLayout>
-          {children}
-        </DashboardLayout>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Suspense fallback={null}>
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
+        </Suspense>
       </body>
     </html>
   );
