@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import styles from './rejestracja.module.css';
+import styles from './register.module.css';
 
 export default function RejestracjaPage() {
   const router = useRouter();
@@ -49,22 +49,28 @@ export default function RejestracjaPage() {
   
 
     return (
-      <>
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Rejestracja</h1>
-          <input type="text" name="username" placeholder="Nazwa użytkownika" minLength={3} required/>
-          <input type="email" name="email" placeholder="Email" required/>
-          <input type="password" name="password" placeholder="Hasło" minLength={8} required/>
+      <div className={styles.registerPage}>
+        <div className={styles.registerForm}>
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <h2 className={styles.registerH2}>Rejestracja</h2>
+            <hr className={styles.topLine} />
+            <label className={styles.formLabel} htmlFor="username">Nazwa użytkownika</label>
+            <input className={styles.formInput} type="text" name="username" placeholder="Nazwa użytkownika" minLength={3} required/><br />
+            <label className={styles.formLabel} htmlFor="email">Email</label>
+            <input className={styles.formInput} type="email" name="email" placeholder="Email" required/><br />
+            <label className={styles.formLabel} htmlFor="password">Hasło</label>
+            <input className={styles.formInput} type="password" name="password" placeholder="Hasło" minLength={8} required/><br />
 
-          <button type="submit">Utwórz konto</button>
+            <button className={styles.submitBtn} type="submit">Utwórz konto</button>
 
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          {success && (<p>Konto pomyślnie utworzone.</p>)}
-        </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {success && (<p className={styles.accountCreated}>🐝 Konto pomyślnie utworzone, witamy w ulu! 🐝</p>)}
+          </form>
+        </div>
         <div className={styles.loginInfo}>
           <p>Masz już konto? |</p>
           <p className={styles.link} onClick={GoToLogin}>Zaloguj się</p>
         </div>
-      </>
+      </div>
    );
 }
