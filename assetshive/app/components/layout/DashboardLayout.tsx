@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import styles from './DashboardLayout.module.css';
 import LoginModal from '../auth/LoginModal';
 import Link from 'next/link'
@@ -12,9 +12,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (searchParams.get('openLogin') === 'true') {
+      const timer = setTimeout(() => {
+        setIsLoginModalOpen(true);
+
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.delete('openLogin');
+        router.replace(`${pathname}?${newParams.toString()}`);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, router, pathname]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -70,20 +83,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <NavItem icon={<PictureIcon />} label="Zdjęcia" href="/pictures" expanded={isExpanded} />
           <NavItem icon={<AnimationIcon />} label="Animacje" href="/animations" expanded={isExpanded} />
           <NavItem icon={<UploadIcon />} label="Wrzutka" href="/upload" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<TagIcon />} label="Wystawione" href="/my-products" expanded={isExpanded} loggedIn={!!user} />
+          <NavItem icon={<ArchiveIcon />} label="Zakupione" href="/my-stuff" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<BasketIcon />} label="Koszyk" href="/basket" expanded={isExpanded} loggedIn={!!user} />
           <NavItem icon={<ContactIcon />} label="Kontakt" href="/contact" expanded={isExpanded} />
         </nav>
 
         <div className={styles.userProfile} onClick={() => !user && setIsLoginModalOpen(true)}>
            <div className={`${styles.userAvatar} ${!user ? 'bg-stone-600' : 'bg-amber-500'}`}>
-             {user ? 'SM' : '?'}
+              <NavItem icon={<UserIcon />} label="" href={pathname} expanded={isExpanded} />
+              <NavItem icon={<UserIcon />} label="" href="/account" expanded={isExpanded} loggedIn={!!user} />
            </div>
 
            {isExpanded && (
              <div className={styles.userDetails}>
                {user ? (
                  <>
-                   <span className={styles.userName}>Jan Kowalski</span>
+                   <span className={styles.userName}>{user.user_metadata?.display_name}</span>
                    <span className={styles.userEmail}>{user.email}</span>
                    <button className={styles.logoutBtn} onClick={handleLogout}>Wyloguj</button>
                  </>
@@ -155,5 +171,14 @@ function ContactIcon() {
   return <svg fill="currentColor" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.44,13c-.22,0-.45-.07-.67-.12a9.44,9.44,0,0,1-1.31-.39,2,2,0,0,0-2.48,1l-.22.45a12.18,12.18,0,0,1-2.66-2,12.18,12.18,0,0,1-2-2.66L10.52,9a2,2,0,0,0,1-2.48,10.33,10.33,0,0,1-.39-1.31c-.05-.22-.09-.45-.12-.68a3,3,0,0,0-3-2.49h-3a3,3,0,0,0-3,3.41A19,19,0,0,0,18.53,21.91l.38,0a3,3,0,0,0,2-.76,3,3,0,0,0,1-2.25v-3A3,3,0,0,0,19.44,13Zm.5,6a1,1,0,0,1-.34.75,1.05,1.05,0,0,1-.82.25A17,17,0,0,1,4.07,5.22a1.09,1.09,0,0,1,.25-.82,1,1,0,0,1,.75-.34h3a1,1,0,0,1,1,.79q.06.41.15.81a11.12,11.12,0,0,0,.46,1.55l-1.4.65a1,1,0,0,0-.49,1.33,14.49,14.49,0,0,0,7,7,1,1,0,0,0,.76,0,1,1,0,0,0,.57-.52l.62-1.4a13.69,13.69,0,0,0,1.58.46q.4.09.81.15a1,1,0,0,1,.79,1Z"/></svg>;
 }
 function BasketIcon() {
-  return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M9 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15 14V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 10L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 10L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>;
+  return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M9 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M15 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M6 10L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 10L14 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
+}
+function UserIcon() {
+  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/><circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/></svg>
+}
+function TagIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
+}
+function ArchiveIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>;
 }
