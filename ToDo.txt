@@ -6,12 +6,12 @@ ToDo:
 strona główna + layout z navbarem;
 > zdjęcia
 	opis ogólny: strona umożliwiająca gościom podgląd, a zalogowanym użytkownikom kupno ukazywanych grafik.
-	opis techniczny: responsywny grid, w każdym polu miniatura grafiki, nazwa, autor, cena, (?)prawa autorskie, przycisk kupna.
+	opis techniczny: responsywny grid, w każdym polu miniatura grafiki, nazwa, autor, cena, (?)prawa autorskie, przycisk kupna. Jeśli użytkownik nie jest zalogowany, to wyskakuje modal logowania.
 	features:
-		[] Przycisk kupna uruchamia modal z powiększoną miniaturką oraz resztą informacji + przycisk kup/dodaj do koszyka
-		[] Pola w gridzie delikatnie się powiększają po najechaniu
+		[x] Przycisk kupna uruchamia modal z powiększoną miniaturką oraz resztą informacji + przycisk kup/dodaj do koszyka
+		[x] Pola w gridzie delikatnie się powiększają po najechaniu
 		[] Wybór formatu danej grafiki (?)i ewentualna konwersja na wybrany format (.png, .jpg, .webp, .gif) (?)poprzez AI api (https://kontent.ai/learn/docs/apis/image-transformation-api?sl=1#a-format)
-		[] Paginacja
+		[x] Paginacja
 		[] (+)Tagi + wyszukiwanie
 ;
 > animacje:

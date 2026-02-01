@@ -5,16 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import styles from './page.module.css';
-
-// Typ Assetu
-interface Asset {
-  id: string;
-  title: string;
-  price: number;
-  file_url: string;
-  file_type: 'image' | 'animation';
-  is_active: boolean;
-}
+import { Asset } from '@/types';
 
 export default function MyProductsPage() {
   const [products, setProducts] = useState<Asset[]>([]);
@@ -83,11 +74,11 @@ export default function MyProductsPage() {
       <div className={styles.grid}>
         {products.length === 0 ? (
           <div className="col-span-full py-10 text-center text-stone-500">
-            Pusto w ulu! Nie wystawiłeś jeszcze żadnych produktów.
-            <br />
-            <a href="/upload" className="mt-4 inline-block text-amber-600 hover:underline">
-              Dodaj coś teraz
-            </a>
+              Świeci pustkami.
+              <br />
+              <a href="/upload" className="mt-4 inline-block text-amber-600 hover:underline">
+                Dodaj coś teraz
+              </a>
           </div>
         ) : (
           products.map((product) => (

@@ -135,6 +135,7 @@ export default function UploadPage() {
 
         // Database Insert
         const parsedPrice = parseFloat(item.price.replace(',', '.')) || 0;
+        const displayName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'Anonim';
 
         const { error: dbError } = await supabase
           .from('assets')
@@ -144,7 +145,8 @@ export default function UploadPage() {
             price: parsedPrice,
             file_url: publicUrl,
             file_type: item.type,
-            user_id: user.id
+            user_id: user.id,
+            author_name: displayName
           });
 
         if (dbError) throw dbError;
