@@ -56,13 +56,13 @@
 .iconCircle {
   width: 56px;
   height: 56px;
-  background-color: #FFFBEB; /* Bardzo jasny miód */
+  background-color: #FFFBEB;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px auto;
-  color: #F59E0B; /* Miód */
+  color: #F59E0B;
 }
 
 .title {

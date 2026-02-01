@@ -42,10 +42,6 @@ export default function RejestracjaPage() {
     setSuccess(true);
     form.reset();
    }
-
-   const GoToLogin = async () => {
-    router.push('/logowanie');
-  }
   
 
     return (
@@ -60,16 +56,11 @@ export default function RejestracjaPage() {
             <input className={styles.formInput} type="email" name="email" placeholder="Email" required/><br />
             <label className={styles.formLabel} htmlFor="password">Hasło</label>
             <input className={styles.formInput} type="password" name="password" placeholder="Hasło" minLength={8} required/><br />
-
             <button className={styles.submitBtn} type="submit">Utwórz konto</button>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && (<p className={styles.accountCreated}>🐝 Konto pomyślnie utworzone, witamy w ulu! 🐝</p>)}
           </form>
-        </div>
-        <div className={styles.loginInfo}>
-          <p>Masz już konto? |</p>
-          <p className={styles.link} onClick={GoToLogin}>Zaloguj się</p>
         </div>
       </div>
    );
