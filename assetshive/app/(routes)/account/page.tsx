@@ -1,20 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useUserStore } from '@/lib/zustand';
+import EditModal from '@/app/components/edit/EditModal';
 import styles from './account.module.css';
 
 export default function Account() {
     const user = useUserStore((state) => state.user);
+    const setGlobalUser = useUserStore((state) => state.setUser);
     const router = useRouter();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
+    const [loading, setLoading] = useState(false);
     
-    const checkIfSignedIn = async () => {
-        if(user === null)
+    useEffect(() => {
+        if (!user) {
             router.push('/');
-    }
+        }
+    }, [user, router]);
 
-    checkIfSignedIn();
+    const formatDate = (dateString: string | undefined) => {
+        if (!dateString) return 'Brak danych';
+        return new Date(dateString).toLocaleString('pl-PL', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();
@@ -24,6 +40,39 @@ export default function Account() {
         useUserStore((state) => null);
         router.push('/');
       };
+
+    const toggleEditModal = async () => {
+        setIsEditModalOpen(true);
+    }
+
+    const handleDeleteAccount = async () => {
+        if (!isDeleteConfirming) {
+            setIsDeleteConfirming(true);
+            // Automatyczne anulowanie potwierdzenia po 10 sekundach, jeśli nic nie kliknie
+            setTimeout(() => setIsDeleteConfirming(false), 10000);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch('/api/delete-user', { method: 'POST' });
+
+            if (response.ok) {
+                await supabase.auth.signOut();
+                setGlobalUser(null);
+                router.push('/');
+            } else {
+                alert('Błąd: Nie udało się usunąć konta.');
+            }
+        } catch (err) {
+            console.error('Błąd usuwania:', err);
+        } finally {
+            setLoading(false);
+            setIsDeleteConfirming(false);
+        }
+    };
+
+    if (!user) return null;
 
     return (
         <>
@@ -44,11 +93,15 @@ export default function Account() {
                 <p className={styles.categoryValue}>********</p>
             </div>
             <div className={styles.infoRow}>
-                <h3 className={styles.categoryName}>Łączne zarobki: </h3>
-                <p className={styles.categoryValue}>-.-- zł</p>
+                <h3 className={styles.categoryName}>Członek od: </h3>
+                <p className={styles.categoryValue}>{user ? formatDate(user.created_at) : ''}</p>
             </div>
             <div className={styles.infoRow}>
-                <button className={styles.optionButton}>Edytuj dane</button>
+                <h3 className={styles.categoryName}>Ostatnio widziany: </h3>
+                <p className={styles.categoryValue}>{user ? formatDate(user.last_sign_in_at) : ''}</p>
+            </div>
+            <div className={styles.infoRow}>
+                <button className={styles.optionButton} onClick={toggleEditModal}>Edytuj dane</button>
                 <button className={styles.optionButton} onClick={handleLogout}>Wyloguj się</button>
             </div>
         </div>
@@ -57,9 +110,21 @@ export default function Account() {
             <h2 className={styles.accountH2}>Niebezpieczna strefa</h2>
             <div className={styles.infoRow}>
                 <h3 className={styles.categoryNameRed}>Usuń swoje konto</h3>
-                <button className={styles.optionButtonRed}>Usuń konto</button>
+                <button 
+                    className={styles.optionButtonRed} 
+                    onClick={handleDeleteAccount}
+                    disabled={loading}
+                >
+                    {loading ? 'Usuwanie...' : isDeleteConfirming ? 'Czy jesteś tego pewny? Tej akcji nie da się cofnąć!' : 'Usuń konto'}
+                </button>
             </div>
         </div>
+        <main>
+            <EditModal 
+                isOpen={isEditModalOpen} 
+                onClose={() => setIsEditModalOpen(false)} 
+            />
+        </main>
         </>
     );
 }

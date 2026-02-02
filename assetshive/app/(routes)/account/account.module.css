@@ -17,6 +17,11 @@
 
 .categoryName {
     margin-right: 5px;
+    font-size: 18px;
+}
+
+.categoryValue {
+    font-size: 18px;
 }
 
 .optionButton {
