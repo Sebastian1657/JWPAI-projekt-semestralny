@@ -115,7 +115,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className={styles.badge}>{cartCount}</div>
             )}
           </div>
-          <NavItem icon={<ContactIcon />} label="Kontakt" href="/contact" expanded={isExpanded} />
         </nav>
 
         <div className={styles.userProfile} onClick={() => !user && setIsLoginModalOpen(true)}>
@@ -210,9 +209,6 @@ function ContactIcon() {
 }
 function BasketIcon() {
   return <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.31063 11.2425C2.15285 10.6114 2.63021 10 3.28078 10H20.7192C21.3698 10 21.8472 10.6114 21.6894 11.2425L19.8787 18.4851C19.6561 19.3754 18.8562 20 17.9384 20H6.06155C5.14382 20 4.34385 19.3754 4.12127 18.4851L2.31063 11.2425Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M9 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M15 14V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M6 10L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 10L14 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
-}
-function UserIcon() {
-  return <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/><circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/></svg>
 }
 function TagIcon() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
