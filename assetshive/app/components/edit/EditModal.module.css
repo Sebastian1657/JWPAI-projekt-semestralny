@@ -1,0 +1,179 @@
+/* Tło całego ekranu (Overlay) */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Główne okno modala */
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  animation: slideUp 0.3s ease-out;
+  border: 1px solid #E7E5E4;
+}
+
+/* Przycisk zamknięcia X */
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #78716C;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  background-color: #F5F5F4;
+  color: #1C1917;
+}
+
+/* Nagłówek (Ikona + Tekst) */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.iconCircle {
+  width: 56px;
+  height: 56px;
+  background-color: #FFFBEB; /* Bardzo jasny miód */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  color: #F59E0B; /* Miód */
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1C1917;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #78716C;
+}
+
+/* Formularz */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #44403C;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #E7E5E4;
+  background-color: #FAFAF9;
+  font-size: 1rem;
+  color: #1C1917;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1); /* Miodowa poświata */
+  background-color: #ffffff;
+}
+
+/* Komunikaty błędów */
+.error {
+  background-color: #FEF2F2;
+  color: #EF4444;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  text-align: center;
+  border: 1px solid #FEE2E2;
+}
+
+/* Przycisk akcji */
+.submitBtn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  background-color: #F59E0B; /* Miód */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.submitBtn:hover {
+  background-color: #D97706; /* Ciemniejszy miód */
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Stopka modala */
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #78716C;
+}
+
+.link {
+  color: #F59E0B;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Animacje */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
