@@ -14,12 +14,23 @@ export default function Account() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isChecking, setIsChecking] = useState(true);
     
     useEffect(() => {
-        if (!user) {
-            router.push('/');
-        }
-    }, [user, router]);
+        const initAuth = async () => {
+            if (!user) {
+                const { data: { user: sbUser } } = await supabase.auth.getUser();
+                if (!sbUser) {
+                    router.push('/');
+                } else {
+                    setGlobalUser(sbUser);
+                }
+            }
+            setIsChecking(false);
+        };
+
+        initAuth();
+    }, [user, router, setGlobalUser]);
 
     const formatDate = (dateString: string | undefined) => {
         if (!dateString) return 'Brak danych';
@@ -71,6 +82,10 @@ export default function Account() {
             setIsDeleteConfirming(false);
         }
     };
+
+    if (isChecking) {
+        return <div className={styles.loadingScreen}>Ładowanie profilu...</div>;
+    }
 
     if (!user) return null;
 
